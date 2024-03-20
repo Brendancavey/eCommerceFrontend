@@ -9,7 +9,7 @@ import Product from "./Pages/Product/Product"
 import Products from "./Pages/Products/Products"
 import NavBar from "./Components/NavBar/NavBar"
 import Footer from "./Components/Footer/Footer"
-import './App.css'
+import './App.scss'
 
 const LayOut = () => {
     return (
