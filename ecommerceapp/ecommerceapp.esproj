@@ -13,6 +13,7 @@
     <Folder Include="src\Components\Footer\" />
     <Folder Include="src\Components\Card\" />
     <Folder Include="src\Components\List\" />
+    <Folder Include="src\Components\Cart\" />
     <Folder Include="src\Pages\Home\" />
     <Folder Include="src\Pages\Product\" />
     <Folder Include="src\Pages\Products\" />
