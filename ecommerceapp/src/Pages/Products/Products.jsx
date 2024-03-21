@@ -1,8 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import List from "../../components/List/List"
 import "./Products.scss"
 
 const Products = () => {
+    const categoryId = parseInt(useParams().id);
     const [maxPrice, setMaxPrice] = useState(1000)
     const [sort, setSort] = useState(null)
     return (
@@ -46,7 +49,7 @@ const Products = () => {
             </div>
             <div className='right'>
                 <img className='categoryImg' src="/images/dog1.jpg" alt=''/>
-
+                <List categoryId={categoryId} maxPrice={maxPrice} sort={sort} />
             </div>
         </div>
     )
