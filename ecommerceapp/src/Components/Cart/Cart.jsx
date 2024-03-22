@@ -3,8 +3,33 @@ import "./Cart.scss";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 function Cart() {
+    let total = 0
     const fakeData = [
         {
+            id: 1,
+            img: "/images/dog2.jpg",
+            img2: "/images/dog0.jpg",
+            title: "Bear Dog",
+            desc: "Enjoys eating, running, and farting.",
+            isNew: false,
+            oldPrice: 19,
+            newPrice: 2,
+            breed: "Pitbull/Husky",
+            weight: 95,
+        },
+        {
+            id: 2,
+            img: "/images/dog3.jpg",
+            img2: "/images/dog4.jpg",
+            title: "Woober Gorl",
+            desc: "Enjoys chasing cats, breaking things, and adventuring.",
+            isNew: true,
+            oldPrice: 36,
+            newPrice: 5,
+            breed: "Pitbull/Husky",
+            weight: 80,
+        },
+        /*{
             id: 1,
             img: "https://images.pexels.com/photos/1656684/pexels-photo-1656684.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
             img2: "https://images.pexels.com/photos/11021985/pexels-photo-11021985.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -23,7 +48,7 @@ function Cart() {
             isNew: true,
             oldPrice: 30,
             newPrice: 17,
-        },
+        },*/
     ];
   return (
       <div className='cart'>
@@ -34,14 +59,15 @@ function Cart() {
                   <div className='details'>
                       <h1>{item.title}</h1>
                       <p>{item.desc.substring(0, 100)}</p>
-                      <div className="price"> 1 x ${item.price}</div>
+                      <div className="price"> 1 x ${item.newPrice}</div>
                   </div>
                   <DeleteOutlineIcon className='delete' />
               </div>
           ))}
           <div className='total'>
               <span>SUBTOTAL</span>
-              <span>$500</span>
+              {fakeData.forEach(dog => total += dog.newPrice)}
+              <span> ${total}</span>
           </div>
           <button>PROCEED TO CHECKOUT</button>
           <span className='reset'> Reset Cart</span>

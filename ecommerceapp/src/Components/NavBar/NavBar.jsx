@@ -23,18 +23,18 @@ const NavBar = () => {
                         <KeyboardArrowDownIcon />
                     </div>
                     <div className="item">
-                        <Link className="link" to="/products/1">Women</Link>
+                        <Link className="link" to="/products/1">Dog Toys</Link>
                     </div>
                     <div className="item">
-                        <Link className="link" to="/products/2">Men</Link>
+                        <Link className="link" to="/products/2">Dogs</Link>
                     </div>
                     <div className="item">
-                        <Link className="link" to="/products/3">Children</Link>
+                        <Link className="link" to="/products/3">Dog Food</Link>
                     </div>
                 </div> 
                 <div className="center">
                     <div>
-                        <Link className="link" to="/">LAMASTORE</Link>
+                        <Link className="link" to="/">DOGGY STORE</Link>
                     </div>
                 </div>
                 <div className="right">

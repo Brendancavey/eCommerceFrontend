@@ -37,24 +37,33 @@
         flex-direction: column;
         gap: 30px;
 
-        .price{
+        .price {
+            display: flex;
+            gap: 20px;
             font-size: 30px;
             color: #2879fe;
             font-weight: 500;
+
+            span {
+                &:first-child {
+                    color: gray;
+                    text-decoration: line-through;
+                }
+            }
         }
 
-        p{
+        p {
             font-size: 18px;
             font-weight: 300;
             text-align: justify;
         }
 
-        .quantity{
+        .quantity {
             display: flex;
             align-items: center;
             gap: 10px;
 
-            button{
+            button {
                 width: 50px;
                 height: 50px;
                 display: flex;
@@ -64,7 +73,8 @@
                 border: none;
             }
         }
-        .addToCart{
+
+        .addToCart {
             width: 250px;
             padding: 10px;
             background-color: #2879fe;
@@ -78,11 +88,11 @@
             font-weight: 500;
         }
 
-        .links{
+        .links {
             display: flex;
             gap: 20px;
 
-            .item{
+            .item {
                 display: flex;
                 align-items: center;
                 gap: 10px;
@@ -91,7 +101,7 @@
             }
         }
 
-        .info{
+        .info {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -99,19 +109,15 @@
             font-size: 14px;
             margin-top: 30px;
 
-            hr{
+            hr {
                 width: 800px;
                 border: 1px solid lightgray;
             }
         }
 
-        hr{
+        hr {
             width: 800px;
             border: 1px solid lightgray;
         }
-
-       
-
-
     }
 }

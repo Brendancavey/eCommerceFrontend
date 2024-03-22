@@ -15,15 +15,15 @@ const Products = () => {
                     <h2>Product Categories</h2>
                     <div className='inputItem'>
                         <input type='checkbox' id="1" value={1} />
-                        <label htmlFor="1">Shirts</label>
+                        <label htmlFor="1">Girl Dogs</label>
                     </div>
                     <div className='inputItem'>
                         <input type='checkbox' id="2" value={2} />
-                        <label htmlFor="2">Pants</label>
+                        <label htmlFor="2">Boy Dogs</label>
                     </div>
                     <div className='inputItem'>
                         <input type='checkbox' id="3" value={3} />
-                        <label htmlFor="3">Shoes</label>
+                        <label htmlFor="3">Nice Dogs</label>
                     </div>
                 </div>
                 <div className='filterItem'>
