@@ -53,7 +53,7 @@ function Admin() {
         <div className='admin'>
             <div>
                 <h1>Admin Page</h1>
-                <form>
+                
                     <div>
                         <h3>Product Name</h3>
                         <input type='text' value={productTitle} placeholder="Product Name" onChange={(e) => setTitle(e.target.value)} />
@@ -86,7 +86,7 @@ function Admin() {
                     <div>
                         <button onClick={() => handleClickAddProduct()}>Add Product</button>
                     </div>
-                </form>
+                
             </div>
         </div>
     )
