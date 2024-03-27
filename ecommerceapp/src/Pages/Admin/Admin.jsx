@@ -8,23 +8,46 @@ function Admin() {
     const [status, setStatus] = useState()
     const [productPrice, setPrice] = useState()
     const [productSalePrice, setSalePrice] = useState()
-    async function handleClick()
+    const [selectedFile0, setSelectedFile0] = useState(null)
+    const [selectedFile1, setSelectedFile1] = useState(null)
+
+    const handleFileChange0 = (event) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setSelectedFile0(event.target.files[0]);
+        }
+    }
+    const handleFileChange1 = (event) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setSelectedFile1(event.target.files[0]);
+        }
+    }
+    async function handleClickAddProduct()
     {
+        const formData = new FormData();
+        formData.append('title', productTitle)
+        formData.append('description', productDesc)
+        formData.append('isNew', status)
+        formData.append('price', parseInt(productPrice))
+        formData.append('salePrice', parseInt(productSalePrice))
+        formData.append('file0', selectedFile0)
+        formData.append('file1', selectedFile1)
+      
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: 0,
-                img: null,
-                img2: null,
-                title: productTitle,
-                description: productDesc,
-                isNew: status,
-                price: parseInt(productPrice),
-                salePrice: parseInt(productSalePrice)
-            })
+            //headers: { 'Content-Type': 'application/json' },
+            body: formData
         };
-        await fetch('https://localhost:7072/Product/addProduct', requestOptions)
+        try {
+            const response = await fetch('https://localhost:7072/Product/addProduct', requestOptions)
+
+            if (response.ok) {
+                console.log("Added product successfully")
+            } else {
+                console.error("Error happened", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error occured: ", error);
+        }
     }
     return (
         <div className='admin'>
@@ -53,7 +76,15 @@ function Admin() {
                         <input type='text' value={productSalePrice} placeholder="Sale Price" onChange={(e) => setSalePrice(e.target.value)} />
                     </div>
                     <div>
-                        <button onClick={() => handleClick()}>Add Product</button>
+                        <h3>Image 1</h3>
+                        <input type='file' onChange={handleFileChange0}/>
+                    </div>
+                    <div>
+                        <h3>Image 2</h3>
+                        <input type='file' onChange={handleFileChange1} />
+                    </div>
+                    <div>
+                        <button onClick={() => handleClickAddProduct()}>Add Product</button>
                     </div>
                 </form>
             </div>
