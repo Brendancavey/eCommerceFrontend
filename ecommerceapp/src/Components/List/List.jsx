@@ -18,9 +18,7 @@ const List = (params) => {
                 console.log("Fetched data successfully")
             }
             const data = await response.json()
-            
             setProducts(data);
-            console.log(products)
         } catch (error) {
             console.error("Error fetching data: ", error)
         }  

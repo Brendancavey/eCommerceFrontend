@@ -2,35 +2,37 @@ import React from 'react'
 import './Card.scss'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import fetchImage from "../../UtilityFunctions/fetchImage";
+import fetchImage2 from "../../UtilityFunctions/fetchImage2";
 
 const Card = ({ item }) => {
-    const [image, setImage] = useState()
+    const [image, setImage1] = useState()
     const [image2, setImage2] = useState()
     useEffect(() => {
-        getImageData(item.id);
-        getImageData2(item.id);
+        async function fetchImageData(id) {
+            const imageUrl = await fetchImage(id);
+            setImage1(imageUrl)
+        }
+        async function fetchImageData2(id) {
+            const imageUrl = await fetchImage2(id);
+            setImage2(imageUrl)
+        }
+        fetchImageData(item.id)
+        fetchImageData2(item.id)
     }, [])
-    async function getImageData(id) {
-        if (item.img) {
-            const response = await fetch(`https://localhost:7072/Product/get-image-by-id/${id}`, {
-                method: 'GET'
-            });
-            const data = await response.blob();
-            setImage(URL.createObjectURL(data));
+    async function handleClickDelete(id) {
+        const response = await fetch(`https://localhost:7072/Product/deleteProduct/${id}`, {
+            method: 'DELETE',
+        });
+        if (response.ok) {
+            console.log("success")
+        } else {
+            console.log("fail")
         }
-        return null; 
-    }
-    async function getImageData2(id) {
-        if (item.img2) {
-            const response = await fetch(`https://localhost:7072/Product/get-image-by-id2/${id}`, {
-                method: 'GET'
-            });
-            const data = await response.blob();
-            setImage2(URL.createObjectURL(data));
-        }
-        return null;
+
     }
     return (
+        <div>
         <Link className='link' to={`/product/${item.id}`}>
             <div className='card'>
                 <div className='image'>
@@ -45,8 +47,9 @@ const Card = ({ item }) => {
                     <h3>${item.salePrice}</h3>
                 </div>
             </div>
-
         </Link >
+            <button onClick={() => handleClickDelete(item.id)}>Delete</button>
+        </div>
     )
 }
 export default Card
