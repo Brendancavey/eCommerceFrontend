@@ -26,8 +26,8 @@ const List = (params) => {
     return (
         <div className='list'>
             {products?.map((item) => (
-                <Card item={item} key={item.id } />
-            )) }
+                <Card item={item} key={item.id} />
+            ))}  
         </div>
     )
 }

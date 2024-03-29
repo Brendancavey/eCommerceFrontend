@@ -29,7 +29,6 @@ const Card = ({ item }) => {
         } else {
             console.log("fail")
         }
-
     }
     return (
         <div>
@@ -39,7 +38,6 @@ const Card = ({ item }) => {
                     {item.isNew && <span>New Item!</span>}
                     <img src={image} alt="" className="mainImg" />
                     <img src={image2} alt="" className="secondImg" />
-
                 </div>
                 <h2>{item.title}</h2>
                 <div className='prices'>
@@ -48,6 +46,7 @@ const Card = ({ item }) => {
                 </div>
             </div>
         </Link >
+            <Link to={`/edit/${item.id}`}>Edit</Link>
             <button onClick={() => handleClickDelete(item.id)}>Delete</button>
         </div>
     )

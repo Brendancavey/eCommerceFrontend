@@ -46,7 +46,6 @@ const Product = () => {
     }
     return (
         <div>
-            
                 <div className='product' key={item.id}>
                     <div className='left'>
                         <div className="images">
@@ -97,7 +96,6 @@ const Product = () => {
                         </div>
                     </div>
                 </div>
-            
         </div>
     )    
 }

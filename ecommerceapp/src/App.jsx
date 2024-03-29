@@ -7,6 +7,7 @@ import Home from "./Pages/Home/Home"
 import Product from "./Pages/Product/Product"
 import Products from "./Pages/Products/Products"
 import Admin from "./Pages/Admin/Admin"
+import Edit from "./Pages/Admin/Edit"
 import NavBar from "./Components/NavBar/NavBar"
 import Footer from "./Components/Footer/Footer"
 import './App.scss'
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
             {
                 path: "/admin",
                 element: <Admin/>
+            },
+            {
+                path: "/edit/:id",
+                element: <Edit/>
             },
         ]
 },

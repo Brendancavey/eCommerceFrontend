@@ -15,7 +15,6 @@
     <Folder Include="src\Components\List\" />
     <Folder Include="src\Components\Cart\" />
     <Folder Include="src\Pages\Home\" />
-    <Folder Include="src\Pages\Admin\" />
     <Folder Include="src\Pages\Products\" />
   </ItemGroup>
 </Project>

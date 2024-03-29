@@ -1,8 +1,12 @@
 import React from 'react'
-import {useState} from 'react'
-import "./Admin.scss"
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import "./Edit.scss"
 
-function Admin() {
+
+function Edit() {
+    const productId = parseInt(useParams().id)
+    const [item, setItem] = useState({})
     const [productTitle, setTitle] = useState()
     const [productDesc, setDesc] = useState()
     const [status, setStatus] = useState()
@@ -11,7 +15,26 @@ function Admin() {
     const [selectedFile0, setSelectedFile0] = useState(null)
     const [selectedFile1, setSelectedFile1] = useState(null)
     const [responseMessage, setResponseMessage] = useState()
-
+    useEffect(() => {
+        getProductData(productId)
+    }, [])
+    async function getProductData(id) {
+        try {
+            const response = await fetch(`https://localhost:7072/Product/get-by-id/${id}`, {
+                method: 'GET'
+            });
+            if (response.ok) {
+                console.log("Fetched product data successfully")
+            }
+            const data = await response.json()
+            setItem(data);
+        } catch (error) {
+            console.error("Error fetching product data: ", error)
+        }
+    }
+    function goBack() {
+        window.history.back();
+    }
     const handleFileChange0 = (event) => {
         if (event.target.files && event.target.files.length > 0) {
             setSelectedFile0(event.target.files[0]);
@@ -22,9 +45,10 @@ function Admin() {
             setSelectedFile1(event.target.files[0]);
         }
     }
-    async function handleClickAddProduct()
+    async function handleClickEditProduct()
     {
         const formData = new FormData();
+        formData.append('Id', productId)
         formData.append('title', productTitle)
         formData.append('description', productDesc)
         formData.append('isNew', status)
@@ -34,16 +58,15 @@ function Admin() {
         formData.append('file1', selectedFile1)
       
         const requestOptions = {
-            method: 'POST',
-            //headers: { 'Content-Type': 'application/json' },
+            method: 'PUT',
             body: formData
         };
         try {
-            const response = await fetch('https://localhost:7072/Product/addProduct', requestOptions)
+            const response = await fetch('https://localhost:7072/Product/updateProduct', requestOptions)
 
             if (response.ok) {
-                setResponseMessage(<h3 style={{ color: "green" }}>Added product successfully</h3>)
-               console.log("Added product successfully")
+                setResponseMessage(<h3 style={{ color: "green" }}>Product updated successfully</h3>)
+                console.log("Product updated successfullyy")
             } else {
                 console.error("Error happened", response.statusText);
             }
@@ -52,17 +75,16 @@ function Admin() {
         }
     }
     return (
-        <div className='admin'>
+        <div className='edit'>
             <div>
-                <h1>Admin Page</h1>
-                
+                <h1>Edit Page</h1>
                     <div>
                         <h3>Product Name</h3>
-                        <input type='text' value={productTitle} placeholder="Product Name" onChange={(e) => setTitle(e.target.value)} />
+                    <input type='text' value={productTitle} placeholder={item.title} onChange={(e) => setTitle(e.target.value)} />
                     </div>
                     <div>
                         <h3>Description</h3>
-                        <input type='text' value={productDesc} placeholder="Description" onChange={(e) => setDesc(e.target.value)} />
+                    <input type='text' value={productDesc} placeholder={item.description} onChange={(e) => setDesc(e.target.value)} />
                     </div>
                     
                     <input type='radio' id='new' value='new' name='isNewItem?' onChange={() => setStatus(true)} />
@@ -71,11 +93,11 @@ function Admin() {
                     <label htmlFor="notNew">Is Not New</label>
                     <div>
                         <h3>Price</h3>
-                        <input type='text' value={productPrice} placeholder="Price" onChange={(e) => setPrice(e.target.value)} />
+                    <input type='text' value={productPrice} placeholder={item.price} onChange={(e) => setPrice(e.target.value)} />
                     </div>
                     <div>
                         <h3>Sale Price</h3>
-                        <input type='text' value={productSalePrice} placeholder="Sale Price" onChange={(e) => setSalePrice(e.target.value)} />
+                    <input type='text' value={productSalePrice} placeholder={item.salePrice} onChange={(e) => setSalePrice(e.target.value)} />
                     </div>
                     <div>
                         <h3>Image 1</h3>
@@ -86,7 +108,8 @@ function Admin() {
                         <input type='file' onChange={handleFileChange1} />
                     </div>
                     <div>
-                        <button onClick={() => handleClickAddProduct()}>Add Product</button>
+                        <button onClick={() => handleClickEditProduct()}>Edit Product</button>
+                        <button onClick={goBack}>Cancel</button>
                         {responseMessage}  
                     </div>
                 
@@ -94,4 +117,4 @@ function Admin() {
         </div>
     )
 }
-export default Admin
+export default Edit
