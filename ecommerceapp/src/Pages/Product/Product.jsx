@@ -7,6 +7,8 @@ import BalanceIcon from '@mui/icons-material/Balance';
 import { useParams } from 'react-router-dom'
 import fetchImage from "../../UtilityFunctions/fetchImage";
 import fetchImage2 from "../../UtilityFunctions/fetchImage2";
+import { useDispatch } from 'react-redux';
+import { addToCart } from "../../Redux/cartReducer";
 
 const Product = () => {
     const productId = parseInt(useParams().id);
@@ -15,6 +17,8 @@ const Product = () => {
     const [image1, setImage1] = useState()
     const [image2, setImage2] = useState()
     const [selectedImg, setSelectedImg] = useState()
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
         getProductData(productId);
@@ -70,7 +74,14 @@ const Product = () => {
                             {quantity}
                             <button onClick={() => setQuantity(prev => prev + 1)}>+</button>
                         </div>
-                        <button className='addToCart'>
+                    <button className='addToCart' onClick={() => dispatch(addToCart({
+                        id: item.id,
+                        title: item.title,
+                        description: item.description,
+                        price: item.salePrice,
+                        img: image1,
+                        quantity,
+                    }))}>
                             <AddShoppingCartIcon /> ADD TO CART
                         </button>
                         <div className='links'>

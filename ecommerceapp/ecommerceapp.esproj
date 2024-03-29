@@ -14,6 +14,7 @@
     <Folder Include="src\Components\Card\" />
     <Folder Include="src\Components\List\" />
     <Folder Include="src\Components\Cart\" />
+    <Folder Include="src\Redux\" />
     <Folder Include="src\Pages\Home\" />
     <Folder Include="src\Pages\Products\" />
   </ItemGroup>
