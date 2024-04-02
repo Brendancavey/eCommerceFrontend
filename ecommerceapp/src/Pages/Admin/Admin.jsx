@@ -6,9 +6,10 @@ function Admin() {
     const [productTitle, setTitle] = useState()
     const [productDesc, setDesc] = useState()
     const [categories, setCategories] = useState()
-    const [status, setStatus] = useState()
+    const [isNew, setIsNew] = useState()
     const [productPrice, setPrice] = useState()
     const [productSalePrice, setSalePrice] = useState()
+    const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedFile0, setSelectedFile0] = useState(null)
     const [selectedFile1, setSelectedFile1] = useState(null)
     const [responseMessage, setResponseMessage] = useState()
@@ -22,7 +23,6 @@ function Admin() {
                 method: 'GET'
             })
             const data = await response.json()
-            console.log(data)
             setCategories(data)
         }
         catch (error) {
@@ -44,12 +44,15 @@ function Admin() {
         const formData = new FormData();
         formData.append('title', productTitle)
         formData.append('description', productDesc)
-        formData.append('isNew', status)
+        formData.append('isNew', isNew)
         formData.append('price', parseInt(productPrice))
         formData.append('salePrice', parseInt(productSalePrice))
         formData.append('file0', selectedFile0)
         formData.append('file1', selectedFile1)
-      
+        selectedCategories.forEach(id => {
+            formData.append('selectedCategoryIds[]', id)
+        })
+
         const requestOptions = {
             method: 'POST',
             //headers: { 'Content-Type': 'application/json' },
@@ -60,14 +63,31 @@ function Admin() {
 
             if (response.ok) {
                 setResponseMessage(<h3 style={{ color: "green" }}>Added product successfully</h3>)
-               console.log("Added product successfully")
+                console.log("Added product successfully")
+                //clear form fields
+                setTitle('')
+                setDesc('')
+                setPrice('')
+                setSalePrice('')
+                setSelectedCategories([])
+
             } else {
                 console.error("Error happened", response.statusText);
+                setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {response.statusText}</h3>)
             }
         } catch (error) {
             console.error("Error occured: ", error);
+            setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {error}</h3>)
         }
     }
+    const handleCategoryChange = (category) =>
+    {
+        const updatedCategories = selectedCategories.includes(category)
+            ? selectedCategories.filter((cat) => cat !== category)
+            : [...selectedCategories, category]
+        setSelectedCategories(updatedCategories)
+    }
+    console.log(selectedCategories)
     return (
         <div className='admin'>
             <div>
@@ -82,9 +102,9 @@ function Admin() {
                         <input type='text' value={productDesc} placeholder="Description" onChange={(e) => setDesc(e.target.value)} />
                     </div>
                     
-                    <input type='radio' id='new' value='new' name='isNewItem?' onChange={() => setStatus(true)} />
+                    <input type='radio' id='new' value='new' name='isNewItem?' onChange={() => setIsNew(true)} />
                     <label htmlFor='new'>Is New</label>
-                    <input type='radio' id='notNew' value='notNew' name='isNewItem?' onChange={() => setStatus(false)} />
+                    <input type='radio' id='notNew' value='notNew' name='isNewItem?' onChange={() => setIsNew(false)} />
                     <label htmlFor="notNew">Is Not New</label>
                     <div>
                         <h3>Price</h3>
@@ -98,7 +118,11 @@ function Admin() {
                         <h3>Category</h3>
                         {categories?.map(cat => (
                             <div className= 'categories' key={cat.id}>
-                                <input type='checkbox' id={cat.id} value={1} />
+                                <input
+                                    type='checkbox'
+                                    id={cat.id}
+                                    checked={selectedCategories.includes(cat.id)}
+                                    onChange={() => handleCategoryChange(cat.id)} />
                                 <label htmlFor={cat.id}>{cat.name}</label>
                             </div>
                         ))}
