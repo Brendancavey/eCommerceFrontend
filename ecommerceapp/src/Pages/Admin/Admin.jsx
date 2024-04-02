@@ -1,10 +1,11 @@
 import React from 'react'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import "./Admin.scss"
 
 function Admin() {
     const [productTitle, setTitle] = useState()
     const [productDesc, setDesc] = useState()
+    const [categories, setCategories] = useState()
     const [status, setStatus] = useState()
     const [productPrice, setPrice] = useState()
     const [productSalePrice, setSalePrice] = useState()
@@ -12,6 +13,22 @@ function Admin() {
     const [selectedFile1, setSelectedFile1] = useState(null)
     const [responseMessage, setResponseMessage] = useState()
 
+    useEffect(() => {
+        getCategories()
+    }, [])
+    async function getCategories() {
+        try {
+            const response = await fetch('https://localhost:7072/Category/getAll', {
+                method: 'GET'
+            })
+            const data = await response.json()
+            console.log(data)
+            setCategories(data)
+        }
+        catch (error) {
+            console.error("Error occured: ", error);
+        }
+    }
     const handleFileChange0 = (event) => {
         if (event.target.files && event.target.files.length > 0) {
             setSelectedFile0(event.target.files[0]);
@@ -78,6 +95,15 @@ function Admin() {
                         <input type='text' value={productSalePrice} placeholder="Sale Price" onChange={(e) => setSalePrice(e.target.value)} />
                     </div>
                     <div>
+                        <h3>Category</h3>
+                        {categories?.map(cat => (
+                            <div className= 'categories' key={cat.id}>
+                                <input type='checkbox' id={cat.id} value={1} />
+                                <label htmlFor={cat.id}>{cat.name}</label>
+                            </div>
+                        ))}
+                    </div>
+                    <div>
                         <h3>Image 1</h3>
                         <input type='file' onChange={handleFileChange0}/>
                     </div>
@@ -89,6 +115,7 @@ function Admin() {
                         <button onClick={() => handleClickAddProduct()}>Add Product</button>
                         {responseMessage}  
                     </div>
+                    
                 
             </div>
         </div>

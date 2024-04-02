@@ -8,6 +8,7 @@ import Product from "./Pages/Product/Product"
 import Products from "./Pages/Products/Products"
 import Admin from "./Pages/Admin/Admin"
 import Edit from "./Pages/Admin/Edit"
+import AddCategory from "./Pages/Admin/AddCategory"
 import NavBar from "./Components/NavBar/NavBar"
 import Footer from "./Components/Footer/Footer"
 import './App.scss'
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
             {
                 path: "/edit/:id",
                 element: <Edit/>
+            },
+            {
+                path: "/addcategory",
+                element: <AddCategory/>
             },
         ]
 },
