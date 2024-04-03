@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import cartReducer from './cartReducer'
+import categoryReducer from './categoryReducer'
 import {
     persistStore,
     persistReducer,
@@ -18,11 +19,13 @@ const persistConfig = {
     storage,
 }
 
-const persistedReducer = persistReducer(persistConfig, cartReducer)
+const persistedCartReducer = persistReducer(persistConfig, cartReducer)
+const persistedCategoryReducer = persistReducer(persistConfig, categoryReducer)
 
 export const store = configureStore({
     reducer: {
-        cart: persistedReducer,
+        cart: persistedCartReducer,
+        categories: persistedCategoryReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

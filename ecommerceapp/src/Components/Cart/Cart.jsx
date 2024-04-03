@@ -13,7 +13,6 @@ function Cart() {
         products.forEach(item => total += item.price * item.quantity)
         return total.toFixed(2);
     }
-
   return (
       <div className='cart'>
           <h1>Products in your cart</h1>

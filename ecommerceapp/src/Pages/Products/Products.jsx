@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import List from "../../components/List/List"
 import "./Products.scss"
+import Categories from "../../Components/Categories/Categories"
 
 const Products = () => {
     const categoryId = parseInt(useParams().id);
@@ -13,18 +14,7 @@ const Products = () => {
             <div className='left'>
                 <div className='filterItem'>
                     <h2>Product Categories</h2>
-                    <div className='inputItem'>
-                        <input type='checkbox' id="1" value={1} />
-                        <label htmlFor="1">Girl Dogs</label>
-                    </div>
-                    <div className='inputItem'>
-                        <input type='checkbox' id="2" value={2} />
-                        <label htmlFor="2">Boy Dogs</label>
-                    </div>
-                    <div className='inputItem'>
-                        <input type='checkbox' id="3" value={3} />
-                        <label htmlFor="3">Nice Dogs</label>
-                    </div>
+                    <Categories/>
                 </div>
                 <div className='filterItem'>
                     <h2>Filter by price</h2>
