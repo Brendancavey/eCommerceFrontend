@@ -12,8 +12,11 @@ const List = (params) => {
     useEffect(() => {
         setSelectedCategories(params.selectedCategories)
     }, [params.selectedCategories])
+    function userSelectedCategories() {
+        return selectedCategories.length > 0
+    }
     async function getProductData() {
-        if (selectedCategories.length > 0) {
+        if (userSelectedCategories()) {
             const url = new URL('https://localhost:7072/Product/get-products-by-categories')
             selectedCategories.forEach(categoryId => {
                 url.searchParams.append('selectedCategoryIds', categoryId)

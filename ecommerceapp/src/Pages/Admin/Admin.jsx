@@ -1,34 +1,25 @@
 import React from 'react'
-import {useState, useEffect} from 'react'
+import { useState} from 'react'
+import Categories from '../../Components/Categories/Categories'
 import "./Admin.scss"
+import { useDispatch } from 'react-redux';
+import { resetCategories } from "../../Redux/categoryReducer";
+import { useSelector } from 'react-redux'
+
+
 
 function Admin() {
+    const selectedCategories = useSelector(state => state.categories.selectedCategories)
     const [productTitle, setTitle] = useState()
     const [productDesc, setDesc] = useState()
-    const [categories, setCategories] = useState()
     const [isNew, setIsNew] = useState()
     const [productPrice, setPrice] = useState()
     const [productSalePrice, setSalePrice] = useState()
-    const [selectedCategories, setSelectedCategories] = useState([])
     const [selectedFile0, setSelectedFile0] = useState(null)
     const [selectedFile1, setSelectedFile1] = useState(null)
     const [responseMessage, setResponseMessage] = useState()
+    const dispatch = useDispatch()
 
-    useEffect(() => {
-        getCategories()
-    }, [])
-    async function getCategories() {
-        try {
-            const response = await fetch('https://localhost:7072/Category/getAll', {
-                method: 'GET'
-            })
-            const data = await response.json()
-            setCategories(data)
-        }
-        catch (error) {
-            console.error("Error occured: ", error);
-        }
-    }
     const handleFileChange0 = (event) => {
         if (event.target.files && event.target.files.length > 0) {
             setSelectedFile0(event.target.files[0]);
@@ -69,7 +60,7 @@ function Admin() {
                 setDesc('')
                 setPrice('')
                 setSalePrice('')
-                setSelectedCategories([])
+                dispatch(resetCategories())
 
             } else {
                 console.error("Error happened", response.statusText);
@@ -80,14 +71,6 @@ function Admin() {
             setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {error}</h3>)
         }
     }
-    const handleCategoryChange = (category) =>
-    {
-        const updatedCategories = selectedCategories.includes(category)
-            ? selectedCategories.filter((cat) => cat !== category)
-            : [...selectedCategories, category]
-        setSelectedCategories(updatedCategories)
-    }
-    console.log(selectedCategories)
     return (
         <div className='admin'>
             <div>
@@ -115,17 +98,7 @@ function Admin() {
                         <input type='text' value={productSalePrice} placeholder="Sale Price" onChange={(e) => setSalePrice(e.target.value)} />
                     </div>
                     <div>
-                        <h3>Category</h3>
-                        {categories?.map(cat => (
-                            <div className= 'categories' key={cat.id}>
-                                <input
-                                    type='checkbox'
-                                    id={cat.id}
-                                    checked={selectedCategories.includes(cat.id)}
-                                    onChange={() => handleCategoryChange(cat.id)} />
-                                <label htmlFor={cat.id}>{cat.name}</label>
-                            </div>
-                        ))}
+                        <Categories/>
                     </div>
                     <div>
                         <h3>Image 1</h3>

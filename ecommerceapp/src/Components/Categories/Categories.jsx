@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux';
-import { addToCategories, removeCategory } from "../../Redux/categoryReducer";
+import { addToCategories, removeCategory, resetCategories } from "../../Redux/categoryReducer";
 
 function Categories() {
     const selectedCategories = useSelector(state => state.categories.selectedCategories)
@@ -10,7 +10,9 @@ function Categories() {
     const dispatch = useDispatch()
     useEffect(() => {
         getCategories()
+        resetSelectedCategories()
     }, [])
+    console.log(selectedCategories)
     async function getCategories() {
         try {
             const response = await fetch('https://localhost:7072/Category/getAll', {
@@ -22,6 +24,9 @@ function Categories() {
         catch (error) {
             console.error("Error occured: ", error);
         }
+    }
+    function resetSelectedCategories() {
+        dispatch(resetCategories())
     }
     const handleCategoryChange = (catId) => {
         selectedCategories.includes(catId)
