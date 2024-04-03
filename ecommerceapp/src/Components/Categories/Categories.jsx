@@ -12,7 +12,6 @@ function Categories() {
         getCategories()
         resetSelectedCategories()
     }, [])
-    console.log(selectedCategories)
     async function getCategories() {
         try {
             const response = await fetch('https://localhost:7072/Category/getAll', {

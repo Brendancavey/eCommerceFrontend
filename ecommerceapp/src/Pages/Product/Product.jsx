@@ -17,6 +17,7 @@ const Product = () => {
     const [image1, setImage1] = useState()
     const [image2, setImage2] = useState()
     const [selectedImg, setSelectedImg] = useState()
+    const [productCategories, setProductCategories] = useState()
 
     const dispatch = useDispatch()
 
@@ -33,6 +34,7 @@ const Product = () => {
         }
         fetchImageData(productId)
         fetchImageData2(productId)
+        getCategoriesData(productId)
     }, [])
     async function getProductData(id) {
         try {
@@ -46,6 +48,20 @@ const Product = () => {
             setItem(data);
         } catch (error) {
             console.error("Error fetching product data: ", error)
+        } 
+    }
+    async function getCategoriesData(productId) {
+        try {
+            const response = await fetch(`https://localhost:7072/Category/get-categories-by-product/${productId}`, {
+                method: 'GET'
+            });
+            if (response.ok) {
+                console.log("Fetched product categories data successfully")
+            }
+            const data = await response.json()
+            setProductCategories(data);
+        } catch (error) {
+            console.error("Error fetching product categories data: ", error)
         } 
     }
     return (
@@ -93,9 +109,11 @@ const Product = () => {
                             </div>
                         </div>
                         <div className='info'>
-                            <span>Breed: {item.breed}</span>
-                            <span>Weight: {item.weight}</span>
-                            <span>Tags: Dogs, Pitbull, Husky</span>
+                            <span>Tags: {productCategories?.map(category => (
+                                <span key={category.id} className='tags'>{category.name}</span>
+                                ))}
+                            </span>
+                        
                         </div>
                         <hr />
                         <div className='info'>
