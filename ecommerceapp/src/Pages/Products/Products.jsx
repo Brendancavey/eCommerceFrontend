@@ -1,11 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import List from "../../components/List/List"
 import "./Products.scss"
 import Categories from "../../Components/Categories/Categories"
 
 const Products = () => {
+    const selectedCats = useSelector(state => state.categories.selectedCategories)
     const categoryId = parseInt(useParams().id);
     const [maxPrice, setMaxPrice] = useState(1000)
     const [sort, setSort] = useState(null)
@@ -39,7 +41,7 @@ const Products = () => {
             </div>
             <div className='right'>
                 <img className='categoryImg' src="/images/dog1.jpg" alt=''/>
-                <List categoryId={categoryId} maxPrice={maxPrice} sort={sort} />
+                <List categoryId={categoryId} selectedCategories={selectedCats} maxPrice={maxPrice} sort={sort} />
             </div>
         </div>
     )

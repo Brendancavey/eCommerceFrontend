@@ -8,7 +8,6 @@ function Categories() {
     const selectedCategories = useSelector(state => state.categories.selectedCategories)
     const [categories, setCategories] = useState()
     const dispatch = useDispatch()
-    console.log(selectedCategories)
     useEffect(() => {
         getCategories()
     }, [])
