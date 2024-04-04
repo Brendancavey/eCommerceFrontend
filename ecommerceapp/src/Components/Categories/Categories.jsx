@@ -24,6 +24,15 @@ function Categories() {
             console.error("Error occured: ", error);
         }
     }
+    async function handleClickDelete(id) {
+        try {
+                await fetch(`https://localhost:7072/Category/deleteCategory/${id}`, {
+                method: 'DELETE'
+            })
+        } catch (error) {
+            console.error("Error occured while deleting category: ", error);
+        }
+    }
     function resetSelectedCategories() {
         dispatch(resetCategories())
     }
@@ -46,6 +55,7 @@ function Categories() {
                         id={cat.id}
                         onChange={() => handleCategoryChange(cat.id)} />
                     <label htmlFor={cat.id}>{cat.name}</label>
+                    <button onClick={() => handleClickDelete(cat.id)}>Delete</button>
                 </div>
             ))}
         </div>

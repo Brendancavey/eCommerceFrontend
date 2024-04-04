@@ -9,7 +9,8 @@ import Categories from "../../Components/Categories/Categories"
 const Products = () => {
     const selectedCats = useSelector(state => state.categories.selectedCategories)
     const categoryId = parseInt(useParams().id);
-    const [maxPrice, setMaxPrice] = useState(1000)
+    const defaultMaxPrice = 500
+    const [maxPrice, setMaxPrice] = useState(defaultMaxPrice)
     const [sort, setSort] = useState(null)
     return (
         <div className='products'>
@@ -22,7 +23,7 @@ const Products = () => {
                     <h2>Filter by price</h2>
                     <div className='inputItem'>
                         <span>0</span>
-                        <input type='range' min={0} max={1000} onChange={(e)=>setMaxPrice(e.target.value)} />
+                        <input type='range' min={0} max={defaultMaxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
                         <span>{maxPrice}</span>
                     </div>
 
