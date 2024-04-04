@@ -8,6 +8,7 @@ const List = (params) => {
     const [selectedCategories, setSelectedCategories] = useState()
     const [maxPrice, setMaxPrice] = useState()
     const [responseMessage, setResponseMessage] = useState(<h3></h3>)
+    const [sortOrder, setSortOrder] = useState()
 
     useEffect(() => {
         setMaxPrice(params.maxPrice)
@@ -16,8 +17,11 @@ const List = (params) => {
         setSelectedCategories(params.selectedCategories)
     }, [params.selectedCategories])
     useEffect(() => {
+        setSortOrder(params.sort)
+    }, [params.sort])
+    useEffect(() => {
         getProductData()
-    }, [selectedCategories, maxPrice])
+    }, [selectedCategories, maxPrice, sortOrder])
     function noProductsFromFilters(data) {
         return data.length === 0
     }
@@ -27,6 +31,7 @@ const List = (params) => {
             url.searchParams.append('selectedCategoryIds', categoryId)
         })
         url.searchParams.append('filterPrice', maxPrice)
+        url.searchParams.append('sortOrder', sortOrder)
         try {
             const response = await fetch(
                 url, {
@@ -47,40 +52,6 @@ const List = (params) => {
         catch (error) {
             console.error("Error fetching data with filters: ", error)
         }
-        /*if (userSelectedCategories()) {
-            const url = new URL('https://localhost:7072/Product/get-products-by-categories')
-            selectedCategories.forEach(categoryId => {
-                url.searchParams.append('selectedCategoryIds', categoryId)
-            })
-            try {
-                const response = await fetch(
-                    url, {
-                    method: 'GET'
-                });
-                if (response.ok) {
-                    console.log("Fetched data with categories successfully")
-                }
-                const data = await response.json()
-                setProducts(data);
-            }
-            catch(error) {
-                console.error("Error fetching data with categories: ", error)
-            }
-        }
-        else {
-            try {
-                const response = await fetch('https://localhost:7072/Product/getAll', {
-                    method: 'GET'
-                });
-                if (response.ok) {
-                    console.log("Fetched data successfully")
-                }
-                const data = await response.json()
-                setProducts(data);
-            } catch (error) {
-                console.error("Error fetching data: ", error)
-            }  
-        }*/
     }
     return (
         <div className='list'>
