@@ -64,7 +64,7 @@ function Admin() {
 
             } else {
                 console.error("Error happened", response.statusText);
-                setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {response.statusText}</h3>)
+                setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {response.status}</h3>)
             }
         } catch (error) {
             console.error("Error occured: ", error);

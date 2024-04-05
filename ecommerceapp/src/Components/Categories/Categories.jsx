@@ -53,6 +53,7 @@ function Categories() {
                     <input
                         type='checkbox'
                         id={cat.id}
+                        checked={selectedCategories.includes(cat.id)}
                         onChange={() => handleCategoryChange(cat.id)} />
                     <label htmlFor={cat.id}>{cat.name}</label>
                     <button onClick={() => handleClickDelete(cat.id)}>Delete</button>

@@ -64,13 +64,20 @@ const Product = () => {
             console.error("Error fetching product categories data: ", error)
         } 
     }
+    function img2() {
+        if (image2 != null) {
+            return <img src={image2} alt="" onClick={() => setSelectedImg(image2)} />
+
+        }
+        return
+    }
     return (
         <div>
                 <div className='product' key={item.id}>
                     <div className='left'>
                         <div className="images">
                         <img src={image1} alt="" onClick={() => setSelectedImg(image1)} />
-                        <img src={image2} alt="" onClick={() => setSelectedImg(image2)} />
+                        {img2() }
                         </div>
                         <div className="mainImg">
                             <img src={selectedImg} alt="" />

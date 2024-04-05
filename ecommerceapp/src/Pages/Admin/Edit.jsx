@@ -18,6 +18,13 @@ function Edit() {
     useEffect(() => {
         getProductData(productId)
     }, [])
+    useEffect(() => {
+        setTitle(item.title)
+        setDesc(item.description)
+        setPrice(item.price)
+        setSalePrice(item.salePrice)
+        setStatus(item.isNew)
+    }, [item])
     async function getProductData(id) {
         try {
             const response = await fetch(`https://localhost:7072/Product/get-by-id/${id}`, {
@@ -87,9 +94,9 @@ function Edit() {
                     <input type='text' value={productDesc} placeholder={item.description} onChange={(e) => setDesc(e.target.value)} />
                     </div>
                     
-                    <input type='radio' id='new' value='new' name='isNewItem?' onChange={() => setStatus(true)} />
+                <input type='radio' id='new' value='new' checked={status} name='isNewItem?' onChange={() => setStatus(true)} />
                     <label htmlFor='new'>Is New</label>
-                    <input type='radio' id='notNew' value='notNew' name='isNewItem?' onChange={() => setStatus(false)} />
+                <input type='radio' id='notNew' value='notNew' checked={!status} name='isNewItem?' onChange={() => setStatus(false)} />
                     <label htmlFor="notNew">Is Not New</label>
                     <div>
                         <h3>Price</h3>
