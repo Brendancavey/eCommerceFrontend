@@ -1,0 +1,22 @@
+.useraccount {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .item {
+        display: flex;
+        color: white;
+        padding: 20px;
+        font-weight: bold;
+    }
+
+    .link {
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px gray;
+        background-color: #2879fe;
+        padding: 20px;
+        text-align: left;
+        gap: 20px;
+    }
+}

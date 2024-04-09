@@ -8,6 +8,9 @@ import Product from "./Pages/Product/Product"
 import Products from "./Pages/Products/Products"
 import Admin from "./Pages/Admin/Admin"
 import Edit from "./Pages/Admin/Edit"
+import Login from "./Pages/Login/Login"
+import Register from "./Pages/Register/Register"
+import UserAccount from "./Pages/UserAccount/UserAccount"
 import AddCategory from "./Pages/Admin/AddCategory"
 import NavBar from "./Components/NavBar/NavBar"
 import Footer from "./Components/Footer/Footer"
@@ -50,6 +53,18 @@ const router = createBrowserRouter([
             {
                 path: "/addcategory",
                 element: <AddCategory/>
+            },
+            {
+                path: "/login",
+                element: <Login/>
+            },
+            {
+                path: "/register",
+                element: <Register/>
+            },
+            {
+                path: "/useraccount",
+                element: <UserAccount/>
             },
         ]
 },
