@@ -1,29 +1,46 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import Categories from '../../Components/Categories/Categories'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { addToCategories, resetCategories } from "../../Redux/categoryReducer";
+
 import "./Edit.scss"
 
 
 function Edit() {
     const productId = parseInt(useParams().id)
+    const selectedCategories = useSelector(state => state.categories.selectedCategories)
+    const dispatch = useDispatch()
     const [item, setItem] = useState({})
     const [productTitle, setTitle] = useState()
     const [productDesc, setDesc] = useState()
     const [status, setStatus] = useState()
     const [productPrice, setPrice] = useState()
     const [productSalePrice, setSalePrice] = useState()
+    const [productCategories, setProductCategories] = useState()
     const [selectedFile0, setSelectedFile0] = useState(null)
     const [selectedFile1, setSelectedFile1] = useState(null)
     const [responseMessage, setResponseMessage] = useState()
     useEffect(() => {
         getProductData(productId)
+        getCategoriesData(productId)
     }, [])
     useEffect(() => {
+        dispatch(resetCategories())
         setTitle(item.title)
         setDesc(item.description)
         setPrice(item.price)
         setSalePrice(item.salePrice)
         setStatus(item.isNew)
+        if (productCategories) {
+            productCategories.forEach(category => {
+                dispatch(addToCategories({
+                    id: category.id
+                }))
+            })
+        }
     }, [item])
     async function getProductData(id) {
         try {
@@ -37,6 +54,21 @@ function Edit() {
             setItem(data);
         } catch (error) {
             console.error("Error fetching product data: ", error)
+        }
+    }
+    async function getCategoriesData(productId) {
+        try {
+            const response = await fetch(`https://localhost:7072/Category/get-categories-by-product/${productId}`, {
+                method: 'GET'
+            });
+            if (response.ok) {
+                console.log("Fetched product categories data successfully")
+                const data = await response.json()
+                setProductCategories(data);
+            }
+            
+        } catch (error) {
+            console.error("Error fetching product categories data: ", error)
         }
     }
     function goBack() {
@@ -63,6 +95,9 @@ function Edit() {
         formData.append('salePrice', parseInt(productSalePrice))
         formData.append('file0', selectedFile0)
         formData.append('file1', selectedFile1)
+        selectedCategories.forEach(id => {
+            formData.append('selectedCategoryIds[]', id)
+        })
       
         const requestOptions = {
             method: 'PUT',
@@ -106,6 +141,7 @@ function Edit() {
                         <h3>Sale Price</h3>
                     <input type='text' value={productSalePrice} placeholder={item.salePrice} onChange={(e) => setSalePrice(e.target.value)} />
                     </div>
+                        <Categories/>
                     <div>
                         <h3>Image 1</h3>
                         <input type='file' onChange={handleFileChange0}/>
