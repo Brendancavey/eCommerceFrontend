@@ -6,6 +6,7 @@ import { addToCategories, removeCategory, resetCategories } from "../../Redux/ca
 
 function Categories() {
     const selectedCategories = useSelector(state => state.categories.selectedCategories)
+    const userRole = useSelector(state => state.user.role)
     const [categories, setCategories] = useState()
     const dispatch = useDispatch()
     useEffect(() => {
@@ -56,7 +57,7 @@ function Categories() {
                         checked={selectedCategories.includes(cat.id)}
                         onChange={() => handleCategoryChange(cat.id)} />
                     <label htmlFor={cat.id}>{cat.name}</label>
-                    <button onClick={() => handleClickDelete(cat.id)}>Delete</button>
+                    {userRole === 'Admin' && <button onClick={() => handleClickDelete(cat.id)}>Delete</button>}
                 </div>
             ))}
         </div>

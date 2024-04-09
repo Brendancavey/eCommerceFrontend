@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import fetchImage from "../../UtilityFunctions/fetchImage";
 import fetchImage2 from "../../UtilityFunctions/fetchImage2";
+import { useSelector } from 'react-redux'
 
 const Card = ({ item }) => {
+    const userRole = useSelector(state => state.user.role)
     const [image, setImage1] = useState()
     const [image2, setImage2] = useState()
     useEffect(() => {
@@ -46,8 +48,8 @@ const Card = ({ item }) => {
                 </div>
             </div>
         </Link >
-            <Link to={`/edit/${item.id}`}>Edit</Link>
-            <button onClick={() => handleClickDelete(item.id)}>Delete</button>
+            {userRole === 'Admin' && <Link to={`/edit/${item.id}`}>Edit</Link>}
+            {userRole === 'Admin' && <button onClick={() => handleClickDelete(item.id)}>Delete</button>}
         </div>
     )
 }

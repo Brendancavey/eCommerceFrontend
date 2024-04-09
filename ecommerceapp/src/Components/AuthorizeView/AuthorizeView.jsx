@@ -1,15 +1,18 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { setUserRole } from "../../Redux/userReducer";
 
 
 
 const UserContext = createContext({});
 
 function AuthorizeView(props) {
+    const dispatch = useDispatch();
     const [authorized, setAuthorized] = useState(false);
     const [loading, setLoading] = useState(true); // add a loading state
-    let emptyuser = { email: "" };
+    let emptyuser = { email: "", role: "" };
 
     const [user, setUser] = useState(emptyuser);
 
@@ -35,7 +38,8 @@ function AuthorizeView(props) {
                 if (response.status == 200) {
                     console.log("Authorized");
                     let j = await response.json();
-                    setUser({ email: j.email });
+                    setUser({ email: j.email, role: j.role });
+                    dispatch(setUserRole({role: j.role}))
                     setAuthorized(true);
                     return response; // return the response
                 } else if (response.status == 401) {
@@ -107,6 +111,14 @@ export function AuthorizedUser(props) {
         return <>{user.email}</>;
     else
         return <></>
+}
+export function AuthorizedRole(props) {
+    const user = React.useContext(UserContext);
+    if (props.value == "role") {
+        return <>{user.role}</>
+    } else {
+        return <></>
+    }
 }
 AuthorizeView.propTypes = {
     children: PropTypes.node, //validate children prop
