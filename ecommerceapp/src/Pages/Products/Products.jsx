@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import List from "../../components/List/List"
+import List from "../../Components/List/List"
 import "./Products.scss"
 import Categories from "../../Components/Categories/Categories"
 

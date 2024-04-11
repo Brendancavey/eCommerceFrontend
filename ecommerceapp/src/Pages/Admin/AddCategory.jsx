@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState} from 'react'
-import "./addcategory.scss"
+import "./AddCategory.scss"
 
 function AddCategory() {
     const [categoryName, setName] = useState()
