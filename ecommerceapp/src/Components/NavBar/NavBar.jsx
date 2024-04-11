@@ -4,7 +4,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { Link } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux'
 import LogoutLink from "../../Components/LogoutLink/LogoutLink"
 
@@ -18,6 +18,12 @@ const NavBar = () => {
     const products = useSelector(state => state.cart.products)
     const cartQuantity = products.length
 
+    useEffect(() => {
+        setOpen(true)
+    }, [cartQuantity])
+    useEffect(() => { //setOpen to false upon initial render because reactjs detects a change in cartQuantity upon initial render
+       setOpen(false)
+    }, [])
     return (
         <div className="navbar">
             <div className="wrapper">
