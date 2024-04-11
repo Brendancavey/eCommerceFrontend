@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux';
 import { addToCategories, removeCategory, resetCategories } from "../../Redux/categoryReducer";
+import { AuthRequestOptions } from '../../Constants/AuthConstants';
 
 function Categories() {
     const selectedCategories = useSelector(state => state.categories.selectedCategories)
@@ -27,9 +28,14 @@ function Categories() {
     }
     async function handleClickDelete(id) {
         try {
-                await fetch(`https://localhost:7072/Category/deleteCategory/${id}`, {
-                method: 'DELETE'
-            })
+            const requestOptions = AuthRequestOptions('DELETE')
+            const response = await fetch(`https://localhost:7072/Category/deleteCategory/${id}`, requestOptions)
+            if (response.ok) {
+                console.log("Successfully deleted category")
+                window.location.reload(); //refresh page to rerender categories list
+            } else {
+                console.log("Error deleting category")
+            }
         } catch (error) {
             console.error("Error occured while deleting category: ", error);
         }

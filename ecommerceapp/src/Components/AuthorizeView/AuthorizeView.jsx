@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { setUserRole } from "../../Redux/userReducer";
+import { AuthRequestOptions } from '../../Constants/AuthConstants';
 
 
 
@@ -63,16 +64,10 @@ function AuthorizeView(props) {
                 }
             }
         }
-        const authToken = localStorage.getItem('token')
+        const requestOptions = AuthRequestOptions("GET")
 
         // call the fetch function with retry logic
-        fetchWithRetry("/pingauth", {
-            method: "GET",
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Bearer ' + authToken
-            },
-        })
+        fetchWithRetry("/pingauth", requestOptions)
             .catch((error) => {
                 // handle the final error
                 console.log(error.message);

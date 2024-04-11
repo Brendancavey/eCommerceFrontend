@@ -1,7 +1,7 @@
 import React from 'react'
 import {useState} from 'react'
 import "./AddCategory.scss"
-
+import { AuthRequestOptions } from '../../Constants/AuthConstants'
 function AddCategory() {
     const [categoryName, setName] = useState()
     const [responseMessage, setResponseMessage] = useState()
@@ -11,17 +11,16 @@ function AddCategory() {
         const formData = new FormData();
         formData.append('name', categoryName)
         formData.append('products', null)
-      
-        const requestOptions = {
-            method: 'POST',
-            body: formData
-        };
+
+        const requestOptions = AuthRequestOptions('POST', formData)
         try {
             const response = await fetch('https://localhost:7072/Category/addCategory', requestOptions)
 
             if (response.ok) {
                 setResponseMessage(<h3 style={{ color: "green" }}>Added Category successfully</h3>)
-               console.log("Added Category successfully")
+                console.log("Added Category successfully")
+                //reset fields
+                setName('')
             } else {
                 console.error("Error happened", response.statusText);
             }

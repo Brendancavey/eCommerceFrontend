@@ -5,8 +5,10 @@ import { useState, useEffect } from 'react'
 import fetchImage from "../../UtilityFunctions/fetchImage";
 import fetchImage2 from "../../UtilityFunctions/fetchImage2";
 import { useSelector } from 'react-redux'
+import { AuthRequestOptions } from '../../Constants/AuthConstants';
 
 const Card = ({ item }) => {
+
     const userRole = useSelector(state => state.user.role)
     const [image, setImage1] = useState()
     const [image2, setImage2] = useState()
@@ -22,12 +24,12 @@ const Card = ({ item }) => {
         fetchImageData(item.id)
         fetchImageData2(item.id)
     }, [])
+    const requestOptions = AuthRequestOptions('DELETE')
     async function handleClickDelete(id) {
-        const response = await fetch(`https://localhost:7072/Product/deleteProduct/${id}`, {
-            method: 'DELETE',
-        });
+        const response = await fetch(`https://localhost:7072/Product/deleteProduct/${id}`, requestOptions)
         if (response.ok) {
             console.log("success")
+            window.location.reload(); //refresh page to rerender products list
         } else {
             console.log("fail")
         }

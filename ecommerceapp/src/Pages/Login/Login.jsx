@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import './Login.scss'
 import { useDispatch } from 'react-redux'
 import { logIn, setUserEmail } from "../../Redux/userReducer";
+import setAuthorization from "../../UtilityFunctions/setAuthorization";
 
 function Login() {
     const dispatch = useDispatch()
@@ -42,14 +43,14 @@ function Login() {
             dispatch(logIn());
             dispatch(setUserEmail({ userEmail: email }));
             setError(<h3 style={{ color: "green" }}>Successful Login</h3>);
-            //window.location.href = '/';
+            window.location.href = '/'; //refresh page to update constants
         }
         else {
             setError(<h3 style={{ color: "red" }}>Error Logging in.</h3>);
         }
         const data = await response.json()
         const token = data.accessToken
-        localStorage.setItem('token', token)
+        setAuthorization(token)
     }
     // handle submit event for the form
     const handleSubmit = (e) => {
@@ -62,44 +63,17 @@ function Login() {
             setError("");
             // post data to the /register api
 
-            var loginurl = "";
-            if (rememberme == true)
+            var loginurl = "/login";
+            /*if (rememberme == true)
                 loginurl = "/login?useCookies=true";
             else
-                loginurl = "/login";
+                loginurl = "/login";*/
 
             userLogin(loginurl)
-
-            /*fetch(loginurl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                }),
-            })
-
-                .then((data) => {
-                    // handle success or error from the server
-                    if (data.ok) {
-                        dispatch(logIn());
-                        dispatch(setUserEmail({ userEmail: email }));
-                        setError(<h3 style={{ color: "green" }}>Successful Login</h3>);
-                        window.location.href = '/';
-                    }
-                    else
-                        setError(<h3 style={{ color: "red" }}>Error Loggin in.</h3>);
-
-                })
-                .catch((error) => {
-                    // handle network error
-                    console.error(error);
-                    setError(<h3 style={{ color: "red" }}>Error Loggin in.</h3>);
-                });*/
         }
     };
+
+
 
     return (
         <div className="login-page">

@@ -20,7 +20,7 @@ function UserAccount() {
                     <h3>Role: <AuthorizedRole value="role" /></h3>
                 </span>
 
-                {<div className="item"><Link className="link" to="/admin">Add Product Role Test</Link></div>}
+                {<div className="item"><Link className="link" to="/addproduct">Add Product Role Test</Link></div>}
                 {userRole === 'Admin' && <div className="item"><Link className="link" to="/addcategory">Add Category</Link></div>}
                 {userRole === 'Admin' && <div className="item"><Link className="link" to="/products/2">Modify Products Page</Link></div>}
             </AuthorizeView>

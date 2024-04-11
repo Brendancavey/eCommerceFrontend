@@ -1,18 +1,18 @@
-import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
 import { logOut } from "../../Redux/userReducer";
+import getAuthorization from "../../UtilityFunctions/getAuthorization";
+import removeAuthorization from "../../UtilityFunctions/removeAuthorization";
 
 function LogoutLink(props) {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn)
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(logOut());
-        const authToken = localStorage.getItem('token')
+        const authToken = getAuthorization()
 
         fetch("/logout", {
             method: "POST",
@@ -27,7 +27,8 @@ function LogoutLink(props) {
         })
             .then((data) => {
                 if (data.ok) {
-                    navigate("/login");
+                    removeAuthorization()
+                    window.location.href = '/'; //refresh page to update constants
                 }
             })
             .catch((error) => {
@@ -37,7 +38,7 @@ function LogoutLink(props) {
 
     return (
         <>
-            <a href="#" onClick={handleSubmit}>{/*isLoggedIn &&*/ props.children}</a>
+            <a href="#" onClick={handleSubmit}>{isLoggedIn && props.children}</a>
         </>
     );
 }

@@ -5,7 +5,7 @@ import Categories from '../../Components/Categories/Categories'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { addToCategories, resetCategories } from "../../Redux/categoryReducer";
-
+import { AuthRequestOptions } from '../../Constants/AuthConstants'
 import "./Edit.scss"
 
 
@@ -98,11 +98,7 @@ function Edit() {
         selectedCategories.forEach(id => {
             formData.append('selectedCategoryIds[]', id)
         })
-      
-        const requestOptions = {
-            method: 'PUT',
-            body: formData
-        };
+        const requestOptions = AuthRequestOptions('PUT', formData);
         try {
             const response = await fetch('https://localhost:7072/Product/updateProduct', requestOptions)
 
@@ -110,9 +106,11 @@ function Edit() {
                 setResponseMessage(<h3 style={{ color: "green" }}>Product updated successfully</h3>)
                 console.log("Product updated successfullyy")
             } else {
+                setResponseMessage(<h3 style={{ color: "red" }}>Error occured while updating: {response.status} </h3>)
                 console.error("Error happened", response.statusText);
             }
         } catch (error) {
+            setResponseMessage(<h3 style={{ color: "red" }}>Error occured while updating: {error.toString()}</h3>)
             console.error("Error occured: ", error);
         }
     }
