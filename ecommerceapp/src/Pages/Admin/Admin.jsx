@@ -5,6 +5,7 @@ import "./Admin.scss"
 import { useDispatch } from 'react-redux';
 import { resetCategories } from "../../Redux/categoryReducer";
 import { useSelector } from 'react-redux'
+import AuthorizeView from "../../Components/AuthorizeView/AuthorizeView"
 
 
 
@@ -43,10 +44,13 @@ function Admin() {
         selectedCategories.forEach(id => {
             formData.append('selectedCategoryIds[]', id)
         })
-
+        const authToken = localStorage.getItem('token')
         const requestOptions = {
             method: 'POST',
-            //headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authToken
+            },
             body: formData
         };
         try {
@@ -68,54 +72,56 @@ function Admin() {
             }
         } catch (error) {
             console.error("Error occured: ", error);
-            setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {error}</h3>)
+            setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {error.toString()}</h3>)
         }
     }
     return (
-        <div className='admin'>
-            <div>
-                <h1>Admin Page</h1>
+        <AuthorizeView>
+            <div className='admin'>
+                <div>
+                    <h1>Admin Page</h1>
                 
-                    <div>
-                        <h3>Product Name</h3>
-                        <input type='text' value={productTitle} placeholder="Product Name" onChange={(e) => setTitle(e.target.value)} />
-                    </div>
-                    <div>
-                        <h3>Description</h3>
-                        <input type='text' value={productDesc} placeholder="Description" onChange={(e) => setDesc(e.target.value)} />
-                    </div>
+                        <div>
+                            <h3>Product Name</h3>
+                            <input type='text' value={productTitle} placeholder="Product Name" onChange={(e) => setTitle(e.target.value)} />
+                        </div>
+                        <div>
+                            <h3>Description</h3>
+                            <input type='text' value={productDesc} placeholder="Description" onChange={(e) => setDesc(e.target.value)} />
+                        </div>
                     
-                    <input type='radio' id='new' value='new' name='isNewItem?' onChange={() => setIsNew(true)} />
-                    <label htmlFor='new'>Is New</label>
-                    <input type='radio' id='notNew' value='notNew' name='isNewItem?' onChange={() => setIsNew(false)} />
-                    <label htmlFor="notNew">Is Not New</label>
-                    <div>
-                        <h3>Price</h3>
-                        <input type='text' value={productPrice} placeholder="Price" onChange={(e) => setPrice(e.target.value)} />
-                    </div>
-                    <div>
-                        <h3>Sale Price</h3>
-                        <input type='text' value={productSalePrice} placeholder="Sale Price" onChange={(e) => setSalePrice(e.target.value)} />
-                    </div>
-                    <div>
-                        <Categories/>
-                    </div>
-                    <div>
-                        <h3>Image 1</h3>
-                        <input type='file' onChange={handleFileChange0}/>
-                    </div>
-                    <div>
-                        <h3>Image 2</h3>
-                        <input type='file' onChange={handleFileChange1} />
-                    </div>
-                    <div>
-                        <button onClick={() => handleClickAddProduct()}>Add Product</button>
-                        {responseMessage}  
-                    </div>
+                        <input type='radio' id='new' value='new' name='isNewItem?' onChange={() => setIsNew(true)} />
+                        <label htmlFor='new'>Is New</label>
+                        <input type='radio' id='notNew' value='notNew' name='isNewItem?' onChange={() => setIsNew(false)} />
+                        <label htmlFor="notNew">Is Not New</label>
+                        <div>
+                            <h3>Price</h3>
+                            <input type='text' value={productPrice} placeholder="Price" onChange={(e) => setPrice(e.target.value)} />
+                        </div>
+                        <div>
+                            <h3>Sale Price</h3>
+                            <input type='text' value={productSalePrice} placeholder="Sale Price" onChange={(e) => setSalePrice(e.target.value)} />
+                        </div>
+                        <div>
+                            <Categories/>
+                        </div>
+                        <div>
+                            <h3>Image 1</h3>
+                            <input type='file' onChange={handleFileChange0}/>
+                        </div>
+                        <div>
+                            <h3>Image 2</h3>
+                            <input type='file' onChange={handleFileChange1} />
+                        </div>
+                        <div>
+                            <button onClick={() => handleClickAddProduct()}>Add Product</button>
+                            {responseMessage}  
+                        </div>
                     
                 
+                </div>
             </div>
-        </div>
+        </AuthorizeView>
     )
 }
 export default Admin

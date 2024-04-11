@@ -19,13 +19,38 @@ function Login() {
         const { name, value } = e.target;
         if (name === "email") setEmail(value);
         if (name === "password") setPassword(value);
-        if (name === "rememberme") setRememberme(e.target.checked);
+        if (name === "rememberme") setRememberme(e.target.checked);  
     };
 
     const handleRegisterClick = () => {
         navigate("/register");
     }
+    async function userLogin(loginurl) {
+        const response = await fetch(loginurl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        })
 
+        if (response.ok) {
+                
+            dispatch(logIn());
+            dispatch(setUserEmail({ userEmail: email }));
+            setError(<h3 style={{ color: "green" }}>Successful Login</h3>);
+            //window.location.href = '/';
+        }
+        else {
+            setError(<h3 style={{ color: "red" }}>Error Logging in.</h3>);
+        }
+        const data = await response.json()
+        const token = data.accessToken
+        localStorage.setItem('token', token)
+    }
     // handle submit event for the form
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -41,9 +66,11 @@ function Login() {
             if (rememberme == true)
                 loginurl = "/login?useCookies=true";
             else
-                loginurl = "/login?useSessionCookies=true";
+                loginurl = "/login";
 
-            fetch(loginurl, {
+            userLogin(loginurl)
+
+            /*fetch(loginurl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -56,7 +83,6 @@ function Login() {
 
                 .then((data) => {
                     // handle success or error from the server
-                    console.log(data);
                     if (data.ok) {
                         dispatch(logIn());
                         dispatch(setUserEmail({ userEmail: email }));
@@ -71,7 +97,7 @@ function Login() {
                     // handle network error
                     console.error(error);
                     setError(<h3 style={{ color: "red" }}>Error Loggin in.</h3>);
-                });
+                });*/
         }
     };
 

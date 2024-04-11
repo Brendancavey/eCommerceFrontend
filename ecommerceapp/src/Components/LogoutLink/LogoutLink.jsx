@@ -12,12 +12,16 @@ function LogoutLink(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(logOut());
+        const authToken = localStorage.getItem('token')
 
         fetch("/logout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + authToken
             },
+            credentials: 'include',
+            
             body: ""
 
         })
@@ -33,7 +37,7 @@ function LogoutLink(props) {
 
     return (
         <>
-            <a href="#" onClick={handleSubmit}>{isLoggedIn && props.children}</a>
+            <a href="#" onClick={handleSubmit}>{/*isLoggedIn &&*/ props.children}</a>
         </>
     );
 }

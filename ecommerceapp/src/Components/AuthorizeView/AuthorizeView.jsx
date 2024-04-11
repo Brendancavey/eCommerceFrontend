@@ -63,10 +63,15 @@ function AuthorizeView(props) {
                 }
             }
         }
+        const authToken = localStorage.getItem('token')
 
         // call the fetch function with retry logic
         fetchWithRetry("/pingauth", {
             method: "GET",
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authToken
+            },
         })
             .catch((error) => {
                 // handle the final error
