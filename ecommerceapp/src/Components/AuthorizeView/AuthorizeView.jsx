@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { setUserRole } from "../../Redux/userReducer";
+import { setUserRole} from "../../Redux/userReducer";
 import { AuthRequestOptions } from '../../Constants/AuthConstants';
 
 
@@ -13,7 +13,7 @@ function AuthorizeView(props) {
     const dispatch = useDispatch();
     const [authorized, setAuthorized] = useState(false);
     const [loading, setLoading] = useState(true); // add a loading state
-    let emptyuser = { email: "", role: "" };
+    let emptyuser = { email: "", role: "", firstName: "", lastName: "", address: "", city: "", zipCode: "",};
 
     const [user, setUser] = useState(emptyuser);
 
@@ -39,8 +39,16 @@ function AuthorizeView(props) {
                 if (response.status == 200) {
                     console.log("Authorized");
                     let j = await response.json();
-                    setUser({ email: j.email, role: j.role });
-                    dispatch(setUserRole({role: j.role}))
+                    setUser({
+                        email: j.email,
+                        role: j.role,
+                        firstName: j.firstName,
+                        lastName: j.lastName,
+                        address: j.address,
+                        city: j.city,
+                        zipCode: j.zipCode,
+                    });
+                    dispatch(setUserRole({ role: j.role }));
                     setAuthorized(true);
                     return response; // return the response
                 } else if (response.status == 401) {
@@ -109,16 +117,20 @@ export function AuthorizedUser(props) {
     // Display the username in a h1 tag
     if (props.value == "email")
         return <>{user.email}</>;
+    else if(props.value == "role")
+        return <>{user.role}</>
+    else if (props.value == "firstName")
+        return <>{user.firstName}</>
+    else if (props.value == "lastName")
+        return <>{user.lastName}</>
+    else if (props.value == "address")
+        return <>{user.address}</>
+    else if (props.value == "city")
+        return <>{user.city}</>
+    else if (props.value == "zipCode")
+        return <>{user.zipCode}</>
     else
         return <></>
-}
-export function AuthorizedRole(props) {
-    const user = React.useContext(UserContext);
-    if (props.value == "role") {
-        return <>{user.role}</>
-    } else {
-        return <></>
-    }
 }
 AuthorizeView.propTypes = {
     children: PropTypes.node, //validate children prop

@@ -42,7 +42,7 @@ function Login() {
                 
             dispatch(logIn());
             dispatch(setUserEmail({ userEmail: email }));
-            setError(<h3 style={{ color: "green" }}>Successful Login</h3>);
+            setError(<h3 style={{ color: "green" }}>Successful Login</h3>);  
             window.location.href = '/'; //refresh page to update constants
         }
         else {

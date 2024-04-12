@@ -8,6 +8,11 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [address, setAddress] = useState("")
+    const [city, setCity] = useState("")
+    const [zipCode, setZipCode] = useState("")
     const navigate = useNavigate();
 
     // state variable for error messages
@@ -24,6 +29,11 @@ function Register() {
         if (name === "email") setEmail(value);
         if (name === "password") setPassword(value);
         if (name === "confirmPassword") setConfirmPassword(value);
+        if (name === "firstName") setFirstName(value);
+        if (name === "lastName") setLastName(value);
+        if (name === "address") setAddress(value);
+        if (name === "city") setCity(value);
+        if (name === "zipCode") setZipCode(value); 
     };
 
     // handle submit event for the form
@@ -40,7 +50,7 @@ function Register() {
             // clear error message
             setError("");
             // post data to the /register api
-            fetch("/register", {
+            fetch("https://localhost:7072/api/ApplicationUser/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -48,6 +58,11 @@ function Register() {
                 body: JSON.stringify({
                     email: email,
                     password: password,
+                    FirstName: firstName,
+                    LastName: lastName,
+                    Address: address,
+                    City: city,
+                    ZipCode: zipCode,
                 }),
             })
                 //.then((response) => response.json())
@@ -73,6 +88,28 @@ function Register() {
             <form onSubmit={handleSubmit}>
                 <div className="register-box">
                     <h3>Register</h3>
+                    <div>
+                        <label htmlFor="firstName">First Name:</label>
+                    </div><div>
+                        <input
+                            type="firstName"
+                            id="firstName"
+                            name="firstName"
+                            value={firstName}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="lastName">Last Name:</label>
+                    </div><div>
+                        <input
+                            type="lastName"
+                            id="lastName"
+                            name="lastName"
+                            value={lastName}
+                            onChange={handleChange}
+                        />
+                    </div>
                     <div>
                         <label htmlFor="email">Email:</label>
                     </div><div>
@@ -101,6 +138,39 @@ function Register() {
                             id="confirmPassword"
                             name="confirmPassword"
                             value={confirmPassword}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="address">Address:</label>
+                    </div><div>
+                        <input
+                            type="address"
+                            id="address"
+                            name="address"
+                            value={address}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="city">City:</label>
+                    </div><div>
+                        <input
+                            type="city"
+                            id="city"
+                            name="city"
+                            value={city}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="zipCode">Zip Code:</label>
+                    </div><div>
+                        <input
+                            type="zipCode"
+                            id="zipCode"
+                            name="zipCode"
+                            value={zipCode}
                             onChange={handleChange}
                         />
                     </div>

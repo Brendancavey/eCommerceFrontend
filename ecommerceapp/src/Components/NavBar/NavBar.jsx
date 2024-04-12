@@ -7,13 +7,16 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux'
 import LogoutLink from "../../Components/LogoutLink/LogoutLink"
-
+import { AuthRequestOptions } from '../../Constants/AuthConstants';
+import { setUserRole, setUserFirstName } from "../../Redux/userReducer";
+import { useDispatch } from 'react-redux'
 
 import Cart from '../Cart/Cart';
 import "./NavBar.scss";
 const NavBar = () => {
+    const dispatch = useDispatch()
     const isLoggedIn = useSelector(state => state.user.isLoggedIn)
-    const userEmail = useSelector(state => state.user.email)
+    const userFirstName = useSelector(state => state.user.firstName)
     const [open, setOpen] = useState(false)
     const products = useSelector(state => state.cart.products)
     const cartQuantity = products.length
@@ -21,8 +24,19 @@ const NavBar = () => {
     useEffect(() => {
         setOpen(true)
     }, [cartQuantity])
-    useEffect(() => { //setOpen to false upon initial render because reactjs detects a change in cartQuantity upon initial render
-       setOpen(false)
+    useEffect(() => { 
+        setOpen(false) //setOpen to false upon initial render because reactjs detects a change in cartQuantity upon initial render
+
+        //Only save user firstname if user is logged in and authorized.
+        async function getAuthorizedUserData() {
+            const requestOptions = AuthRequestOptions("GET")
+            const response = await fetch("/pingauth", requestOptions)
+            const data = await response.json()
+            if (response.ok) {
+                dispatch(setUserFirstName({ firstName: data.firstName })); //save name to user redux state for persistance
+            }
+        }
+        getAuthorizedUserData()
     }, [])
     return (
         <div className="navbar">
@@ -59,7 +73,7 @@ const NavBar = () => {
                     <div className="icons">
                         <span>
                         {isLoggedIn && <Link to="/useraccount">
-                            <h3>Hello {userEmail}</h3>
+                            <h3>Hello {userFirstName}</h3>
                         </Link>}
                         <LogoutLink >
                             Logout
