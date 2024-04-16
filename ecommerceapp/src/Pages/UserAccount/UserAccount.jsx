@@ -4,10 +4,8 @@ import AuthorizeView, { AuthorizedUser } from "../../Components/AuthorizeView/Au
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux'
 
-
 function UserAccount() {
     const userRole = useSelector(state => state.user.role)
-
 
     return (
         <div className="useraccount">
@@ -33,8 +31,7 @@ function UserAccount() {
                     {<div className="item"><Link className="link" to="/addproduct">Add Product Role Test</Link></div>}
                     {userRole === 'Admin' && <div className="item"><Link className="link" to="/addcategory">Add Category</Link></div>}
                     {userRole === 'Admin' && <div className="item"><Link className="link" to="/products/2">Modify Products Page</Link></div>}
-                </div>
-                
+                </div>  
             </AuthorizeView>
         </div>
   );

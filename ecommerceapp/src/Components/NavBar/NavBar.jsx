@@ -8,8 +8,10 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux'
 import LogoutLink from "../../Components/LogoutLink/LogoutLink"
 import { AuthRequestOptions } from '../../Constants/AuthConstants';
-import { setUserRole, setUserFirstName } from "../../Redux/userReducer";
-import { useDispatch } from 'react-redux'
+import { setUserFirstName } from "../../Redux/userReducer";
+import { useDispatch } from 'react-redux';
+import { addToCart } from "../../Redux/cartReducer";
+
 
 import Cart from '../Cart/Cart';
 import "./NavBar.scss";
@@ -17,14 +19,27 @@ const NavBar = () => {
     const dispatch = useDispatch()
     const isLoggedIn = useSelector(state => state.user.isLoggedIn)
     const userFirstName = useSelector(state => state.user.firstName)
-    const [open, setOpen] = useState(false)
+    const [cartOpen, setOpen] = useState(false)
     const products = useSelector(state => state.cart.products)
     const cartQuantity = products.length
+    const [cartProductIds, setCartProductIds] = useState()
+    const [retrievedCartItems, setRetrievedCartItems] = useState(false)
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            getProductData(cartProductIds)
+        }
+    }, [cartProductIds])
     useEffect(() => {
         setOpen(true)
     }, [cartQuantity])
     useEffect(() => { 
+        if (isLoggedIn && !retrievedCartItems) {
+            getUserCart()
+        }
+        else {
+            console.log("not logged in to get cart")
+        }
         setOpen(false) //setOpen to false upon initial render because reactjs detects a change in cartQuantity upon initial render
 
         //Only save user firstname if user is logged in and authorized.
@@ -38,6 +53,52 @@ const NavBar = () => {
         }
         getAuthorizedUserData()
     }, [])
+        
+    async function getProductData(ids) {
+        try {
+            ids.forEach(async id => {
+                try {
+                    const response = await fetch(`https://localhost:7072/Product/get-by-id/${id}`, {
+                        method: 'GET'
+                    })
+                    const data = await response.json()
+                    dispatch(addToCart({
+                        id: data.id,
+                        title: data.title,
+                        description: data.description,
+                        price: data.salePrice,
+                        //img: image1,
+                        //quantity,
+                    }))
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+        } catch {
+            console.log("no product ids to retrieve product data")
+        }
+
+    }
+    async function getUserCart() {
+        try {
+            const requestOptions = AuthRequestOptions("GET")
+            const response = await fetch("https://localhost:7072/api/ApplicationUser/getcart", requestOptions)
+            const data = await response.json()
+            setCartProductIds(data);
+
+            if (response.ok) {
+                console.log("Successfully retrieved user cart")
+                setRetrievedCartItems(true)
+            }
+            else {
+                console.log("Failed to retrieve user cart")
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
     return (
         <div className="navbar">
             <div className="wrapper">
@@ -84,14 +145,14 @@ const NavBar = () => {
                             <PersonOutlineOutlinedIcon />
                         </Link>} 
                         <FavoriteBorderOutlinedIcon />
-                        <div className="cartIcon" onClick={()=>setOpen(!open) }>
+                        <div className="cartIcon" onClick={()=>setOpen(!cartOpen) }>
                             <ShoppingCartOutlinedIcon />
                             <span>{cartQuantity}</span>
                         </div>
                     </div>
                  </div>
             </div>
-            {open && <Cart/>}
+            {cartOpen && <Cart/>}
         </div>
 
     )

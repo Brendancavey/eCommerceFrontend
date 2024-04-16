@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import './Login.scss'
 import { useDispatch } from 'react-redux'
 import { logIn, setUserEmail } from "../../Redux/userReducer";
+import { resetCart } from "../../Redux/cartReducer";
 import setAuthorization from "../../UtilityFunctions/setAuthorization";
 
 function Login() {
@@ -42,6 +43,7 @@ function Login() {
                 
             dispatch(logIn());
             dispatch(setUserEmail({ userEmail: email }));
+            dispatch(resetCart());
             setError(<h3 style={{ color: "green" }}>Successful Login</h3>);  
             window.location.href = '/'; //refresh page to update constants
         }
