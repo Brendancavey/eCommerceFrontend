@@ -14,7 +14,8 @@ function LogoutLink(props) {
     async function saveCart() {
         const formData = new FormData()
         cartProducts.forEach(product => {
-            formData.append('productIds[]', product.id)
+            formData.append(product.id, product.quantity)
+
         })
         const requestOptions = AuthRequestOptions("PUT", formData)
 
@@ -26,11 +27,10 @@ function LogoutLink(props) {
             console.log("Cart did not save successfully")
         }
     }
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        saveCart();
+    async function handleSubmit(){ 
+        await saveCart();
         const authToken = getAuthorization()
-        fetch("/logout", {
+        const response = await fetch("/logout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -41,18 +41,16 @@ function LogoutLink(props) {
             body: ""
 
         })
-            .then((data) => {
-                if (data.ok) {
-                    removeAuthorization()
-                    dispatch(resetCart())
-                    dispatch(logOut());
-                    window.location.href = '/'; //refresh page to update constants
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            })
-    };
+        if (response.ok) {
+            removeAuthorization()
+            dispatch(resetCart())
+            dispatch(logOut());
+            window.location.href = '/'; //refresh page to update constants
+        } else {
+            console.log("error occured")
+        }
+            
+    }
 
     return (
         <>
