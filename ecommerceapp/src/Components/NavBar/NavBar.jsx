@@ -11,10 +11,10 @@ import { AuthRequestOptions } from '../../Constants/AuthConstants';
 import { setUserFirstName } from "../../Redux/userReducer";
 import { useDispatch } from 'react-redux';
 import { addToCart, setItemQuantity } from "../../Redux/cartReducer";
-
-
 import Cart from '../Cart/Cart';
 import "./NavBar.scss";
+import fetchImage from '../../UtilityFunctions/fetchImage';
+
 const NavBar = () => {
     const dispatch = useDispatch()
     const isLoggedIn = useSelector(state => state.user.isLoggedIn)
@@ -53,7 +53,7 @@ const NavBar = () => {
         }
         getAuthorizedUserData()
     }, [])
-        
+
     async function getProductData(idsMap) {
         try {
             Object.keys(idsMap).forEach(async id => {
@@ -62,12 +62,13 @@ const NavBar = () => {
                         method: 'GET'
                     })
                     const data = await response.json()
+                    const imageData = await fetchImage(id)
                     dispatch(addToCart({
                         id: data.id,
                         title: data.title,
                         description: data.description,
                         price: data.salePrice,
-                        //img: image1,
+                        img: imageData,
                         //quantity        do not add to quantity, need to set quantity
                     }))
                     dispatch(setItemQuantity({
