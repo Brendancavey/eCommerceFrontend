@@ -10,7 +10,7 @@ import LogoutLink from "../../Components/LogoutLink/LogoutLink"
 import { AuthRequestOptions } from '../../Constants/AuthConstants';
 import { setUserFirstName } from "../../Redux/userReducer";
 import { useDispatch } from 'react-redux';
-import { addToCart } from "../../Redux/cartReducer";
+import { addToCart, setItemQuantity } from "../../Redux/cartReducer";
 
 
 import Cart from '../Cart/Cart';
@@ -22,14 +22,14 @@ const NavBar = () => {
     const [cartOpen, setOpen] = useState(false)
     const products = useSelector(state => state.cart.products)
     const cartQuantity = products.length
-    const [cartProductIds, setCartProductIds] = useState()
+    const [cartProductIdsMap, setCartProductIdsMap] = useState() //contains [productId : productQuantity]
     const [retrievedCartItems, setRetrievedCartItems] = useState(false)
 
     useEffect(() => {
         if (isLoggedIn) {
-            getProductData(cartProductIds)
+            getProductData(cartProductIdsMap)
         }
-    }, [cartProductIds])
+    }, [cartProductIdsMap])
     useEffect(() => {
         setOpen(true)
     }, [cartQuantity])
@@ -54,9 +54,9 @@ const NavBar = () => {
         getAuthorizedUserData()
     }, [])
         
-    async function getProductData(ids) {
+    async function getProductData(idsMap) {
         try {
-            ids.forEach(async id => {
+            Object.keys(idsMap).forEach(async id => {
                 try {
                     const response = await fetch(`https://localhost:7072/Product/get-by-id/${id}`, {
                         method: 'GET'
@@ -68,7 +68,11 @@ const NavBar = () => {
                         description: data.description,
                         price: data.salePrice,
                         //img: image1,
-                        //quantity,
+                        //quantity        do not add to quantity, need to set quantity
+                    }))
+                    dispatch(setItemQuantity({
+                        id: data.id,
+                        quantity: idsMap[id]
                     }))
                 } catch (error) {
                     console.log(error)
@@ -84,7 +88,7 @@ const NavBar = () => {
             const requestOptions = AuthRequestOptions("GET")
             const response = await fetch("https://localhost:7072/api/ApplicationUser/getcart", requestOptions)
             const data = await response.json()
-            setCartProductIds(data);
+            setCartProductIdsMap(data);
 
             if (response.ok) {
                 console.log("Successfully retrieved user cart")
