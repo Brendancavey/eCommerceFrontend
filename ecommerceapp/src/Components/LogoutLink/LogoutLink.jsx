@@ -19,7 +19,7 @@ function LogoutLink(props) {
         })
         const requestOptions = AuthRequestOptions("PUT", formData)
 
-        const response = await fetch("https://localhost:7072/api/ApplicationUser/updatecart", requestOptions)
+        const response = await fetch("https://localhost:7072/api/Cart/updatecart", requestOptions)
         if (response.ok) {
             console.log("Cart saved succesfully")
         }

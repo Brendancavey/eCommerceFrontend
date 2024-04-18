@@ -87,7 +87,7 @@ const NavBar = () => {
     async function getUserCart() {
         try {
             const requestOptions = AuthRequestOptions("GET")
-            const response = await fetch("https://localhost:7072/api/ApplicationUser/getcart", requestOptions)
+            const response = await fetch("https://localhost:7072/api/Cart/getcart", requestOptions)
             const data = await response.json()
             setCartProductIdsMap(data);
 
