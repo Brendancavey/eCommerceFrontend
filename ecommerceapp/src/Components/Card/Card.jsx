@@ -2,10 +2,10 @@ import React from 'react'
 import './Card.scss'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import fetchImage from "../../UtilityFunctions/fetchImage";
-import fetchImage2 from "../../UtilityFunctions/fetchImage2";
 import { useSelector } from 'react-redux'
-import { AuthRequestOptions } from '../../Constants/AuthConstants';
+import { getProductImage, getProductImage2 } from '../../Services/productService'
+import { ADMIN_NAME } from '../../Constants/AuthConstants'
+import { deleteProduct } from '../../Services/productService'
 
 const Card = ({ item }) => {
 
@@ -13,26 +13,17 @@ const Card = ({ item }) => {
     const [image, setImage1] = useState()
     const [image2, setImage2] = useState()
     useEffect(() => {
-        async function fetchImageData(id) {
-            const imageUrl = await fetchImage(id);
-            setImage1(imageUrl)
-        }
-        async function fetchImageData2(id) {
-            const imageUrl = await fetchImage2(id);
-            setImage2(imageUrl)
-        }
-        fetchImageData(item.id)
-        fetchImageData2(item.id)
+        getImageData(item.id)
     }, [])
-    const requestOptions = AuthRequestOptions('DELETE')
+    async function getImageData(id) {
+        const imageUrl = await getProductImage(id);
+        setImage1(imageUrl)
+
+        const imageUrl2 = await getProductImage2(id)
+        setImage2(imageUrl2)
+    }
     async function handleClickDelete(id) {
-        const response = await fetch(`https://localhost:7072/Product/deleteProduct/${id}`, requestOptions)
-        if (response.ok) {
-            console.log("success")
-            window.location.reload(); //refresh page to rerender products list
-        } else {
-            console.log("fail")
-        }
+        await deleteProduct(id)
     }
     return (
         <div>
@@ -49,9 +40,9 @@ const Card = ({ item }) => {
                     <h3>${item.salePrice}</h3>
                 </div>
             </div>
-        </Link >
-            {userRole === 'Admin' && <Link to={`/edit/${item.id}`}>Edit</Link>}
-            {userRole === 'Admin' && <button onClick={() => handleClickDelete(item.id)}>Delete</button>}
+            </Link >
+            {userRole === ADMIN_NAME && <Link to={`/edit/${item.id}`}>Edit</Link>}
+            {userRole === ADMIN_NAME && <button onClick={() => handleClickDelete(item.id)}>Delete</button>}
         </div>
     )
 }

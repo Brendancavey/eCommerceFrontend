@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux';
 import { addToCategories, removeCategory, resetCategories } from "../../Redux/categoryReducer";
-import { AuthRequestOptions } from '../../Constants/AuthConstants';
+import { deleteCategory, getAllCategories } from '../../Services/categoryService';
 
 function Categories() {
     const selectedCategories = useSelector(state => state.categories.selectedCategories)
@@ -11,34 +11,15 @@ function Categories() {
     const [categories, setCategories] = useState()
     const dispatch = useDispatch()
     useEffect(() => {
-        getCategories()
+        getCategoriesData()
         resetSelectedCategories()
     }, [])
-    async function getCategories() {
-        try {
-            const response = await fetch('https://localhost:7072/Category/getAll', {
-                method: 'GET'
-            })
-            const data = await response.json()
-            setCategories(data)
-        }
-        catch (error) {
-            console.error("Error occured: ", error);
-        }
+    async function getCategoriesData() {
+        const categoriesData = await getAllCategories()
+        setCategories(categoriesData)
     }
     async function handleClickDelete(id) {
-        try {
-            const requestOptions = AuthRequestOptions('DELETE')
-            const response = await fetch(`https://localhost:7072/Category/deleteCategory/${id}`, requestOptions)
-            if (response.ok) {
-                console.log("Successfully deleted category")
-                window.location.reload(); //refresh page to rerender categories list
-            } else {
-                console.log("Error deleting category")
-            }
-        } catch (error) {
-            console.error("Error occured while deleting category: ", error);
-        }
+        await deleteCategory(id)
     }
     function resetSelectedCategories() {
         dispatch(resetCategories())

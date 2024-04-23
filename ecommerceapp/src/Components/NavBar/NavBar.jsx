@@ -7,72 +7,78 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux'
 import LogoutLink from "../../Components/LogoutLink/LogoutLink"
-import { AuthRequestOptions } from '../../Constants/AuthConstants';
 import { setUserFirstName } from "../../Redux/userReducer";
 import { useDispatch } from 'react-redux';
-import { addToCart, setItemQuantity } from "../../Redux/cartReducer";
+import { addToCart, setImage, setItemQuantity } from "../../Redux/cartReducer";
 import Cart from '../Cart/Cart';
 import "./NavBar.scss";
-import fetchImage from '../../UtilityFunctions/fetchImage';
+import { STORE_NAME, PRODUCTS_NAME } from '../../Constants/DesignConstants';
+import { getAuthorizedUserData, getUserCart } from '../../Services/userService'
+import { getProductById, getProductImage } from '../../Services/productService'
 
 const NavBar = () => {
     const dispatch = useDispatch()
     const isLoggedIn = useSelector(state => state.user.isLoggedIn)
     const userFirstName = useSelector(state => state.user.firstName)
-    const [cartOpen, setOpen] = useState(false)
+    const [cartOpen, setCartOpen] = useState(false)
     const products = useSelector(state => state.cart.products)
     const cartQuantity = products.length
     const [cartProductIdsMap, setCartProductIdsMap] = useState() //contains [productId : productQuantity]
     const [retrievedCartItems, setRetrievedCartItems] = useState(false)
 
     useEffect(() => {
-        if (isLoggedIn) {
-            getProductData(cartProductIdsMap)
-        }
-    }, [cartProductIdsMap])
-    useEffect(() => {
-        setOpen(true)
-    }, [cartQuantity])
-    useEffect(() => { 
         if (isLoggedIn && !retrievedCartItems) {
-            getUserCart()
+            getUserCartData()
         }
         else {
             console.log("not logged in to get cart")
         }
-        setOpen(false) //setOpen to false upon initial render because reactjs detects a change in cartQuantity upon initial render
-
-        //Only save user firstname if user is logged in and authorized.
-        async function getAuthorizedUserData() {
-            const requestOptions = AuthRequestOptions("GET")
-            const response = await fetch("/pingauth", requestOptions)
-            const data = await response.json()
-            if (response.ok) {
-                dispatch(setUserFirstName({ firstName: data.firstName })); //save name to user redux state for persistance
-            }
-        }
-        getAuthorizedUserData()
+        setCartOpen(false) //setCartOpen to false upon initial render because reactjs detects a change in cartQuantity upon initial render
+        getUserData()
+        getProductImagesInCart()
     }, [])
+    useEffect(() => {
+        if (isLoggedIn) {
+            getCartProductsData(cartProductIdsMap)
+        }
+    }, [cartProductIdsMap])
+    useEffect(() => {
+        setCartOpen(true)
+    }, [cartQuantity])
 
-    async function getProductData(idsMap) {
+    async function getUserCartData() {
+        const cartData = await getUserCart()
+        setCartProductIdsMap(cartData)
+        setRetrievedCartItems(true)
+    }
+    async function getUserData() {
+        const userData = await getAuthorizedUserData()
+        dispatch(setUserFirstName({ firstName: userData.firstName }))//save name to user redux state for persistance
+    }
+    async function getProductImagesInCart() {
+        products.forEach(async product => {
+            dispatch(setImage({
+                id: product.id,
+                img: await getProductImage(product.id)
+            }))
+        })
+    }
+    async function getCartProductsData(idsMap) {
         try {
             Object.keys(idsMap).forEach(async id => {
                 try {
-                    const response = await fetch(`https://localhost:7072/Product/get-by-id/${id}`, {
-                        method: 'GET'
-                    })
-                    const data = await response.json()
-                    const imageData = await fetchImage(id)
+                    const productData = await getProductById(id)
+                    const imageData = await getProductImage(id)
                     dispatch(addToCart({
-                        id: data.id,
-                        title: data.title,
-                        description: data.description,
-                        price: data.salePrice,
+                        id: productData.id,
+                        title: productData.title,
+                        description: productData.description,
+                        price: productData.salePrice,
                         img: imageData,
-                        //quantity        do not add to quantity, need to set quantity
+                        //quantity   Do not add to quantity. Need to set quantity
                     }))
                     dispatch(setItemQuantity({
-                        id: data.id,
+                        id: productData.id,
                         quantity: idsMap[id]
                     }))
                 } catch (error) {
@@ -80,62 +86,43 @@ const NavBar = () => {
                 }
             })
         } catch {
-            console.log("no product ids to retrieve product data")
+            console.log("no product ids to retrieve product productData")
         }
-
     }
-    async function getUserCart() {
-        try {
-            const requestOptions = AuthRequestOptions("GET")
-            const response = await fetch("https://localhost:7072/api/Cart/getcart", requestOptions)
-            const data = await response.json()
-            setCartProductIdsMap(data);
 
-            if (response.ok) {
-                console.log("Successfully retrieved user cart")
-                setRetrievedCartItems(true)
-            }
-            else {
-                console.log("Failed to retrieve user cart")
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
+    
     return (
         <div className="navbar">
             <div className="wrapper">
                 <div className="left">
                     <div className="item">
                         <img src="images/en.png" alt="" />
-                        <KeyboardArrowDownIcon />
+                        {/*<KeyboardArrowDownIcon />*/}
                     </div>
                     <div className="item">
                         <span>USD</span>
-                        <KeyboardArrowDownIcon />
+                        {/*<KeyboardArrowDownIcon />*/}
                     </div>
                     <div className="item">
-                        <Link className="link" to="/products/1">Dog Toys</Link>
+                        {/*<Link className="link" to="/products/1">Dog Toys</Link>*/}
                     </div>
                     <div className="item">
-                        <Link className="link" to="/products/2">Dogs</Link>
+                        <Link className="link" to="/products/2">{PRODUCTS_NAME}</Link>
                     </div>
                     <div className="item">
-                        <Link className="link" to="/products/3">Dog Food</Link>
+                        {/*<Link className="link" to="/products/3">Dog Food</Link>*/}
                     </div>
                 </div> 
                 <div className="center">
                     <div>
-                        <Link className="link" to="/">DOGGY STORE</Link>
+                        <Link className="link" to="/">{STORE_NAME}</Link>
                     </div>
                 </div>
                 <div className="right">
                     <div className="item"><Link className="link" to="/">Homepage</Link></div>
-                    <div className="item"><Link className="link" to="/">About</Link></div>
-                    <div className="item"><Link className="link" to="/">Contact</Link></div>
-                    <div className="item"><Link className="link" to="/">Stores</Link></div>
+                    {/*<div className="item"><Link className="link" to="/">About</Link></div>*/}
+                    {/*<div className="item"><Link className="link" to="/">Contact</Link></div>*/}
+                    {/*<div className="item"><Link className="link" to="/">Stores</Link></div>*/ }
                     <div className="icons">
                         <span>
                         {isLoggedIn && <Link to="/useraccount">
@@ -149,8 +136,8 @@ const NavBar = () => {
                         {isLoggedIn===false && <Link className="link" to="/useraccount">
                             <PersonOutlineOutlinedIcon />
                         </Link>} 
-                        <FavoriteBorderOutlinedIcon />
-                        <div className="cartIcon" onClick={()=>setOpen(!cartOpen) }>
+                        {/*<FavoriteBorderOutlinedIcon />*/}
+                        <div className="cartIcon" onClick={()=>setCartOpen(!cartOpen) }>
                             <ShoppingCartOutlinedIcon />
                             <span>{cartQuantity}</span>
                         </div>

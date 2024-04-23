@@ -2,6 +2,8 @@ import getAuthorization from '../UtilityFunctions/getAuthorization'
 
 export const STORAGE_KEY = 'token'; //for session storage of Authentication tokens
 
+export const ADMIN_NAME = "Admin";
+
 let AUTH_TOKEN = getAuthorization(); //AUTH_TOKEN must be refreshed after token is removed from storage/user logs out
 
 const AUTH_HEADERS = {

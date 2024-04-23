@@ -3,6 +3,7 @@ import './UserAccount.scss'
 import AuthorizeView, { AuthorizedUser } from "../../Components/AuthorizeView/AuthorizeView"
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux'
+import { ADMIN_NAME } from '../../Constants/AuthConstants'
 
 function UserAccount() {
     const userRole = useSelector(state => state.user.role)
@@ -29,8 +30,8 @@ function UserAccount() {
                 <div className="adminPanel">
                     {<h2>Admin Panel</h2>}
                     {<div className="item"><Link className="link" to="/addproduct">Add Product Role Test</Link></div>}
-                    {userRole === 'Admin' && <div className="item"><Link className="link" to="/addcategory">Add Category</Link></div>}
-                    {userRole === 'Admin' && <div className="item"><Link className="link" to="/products/2">Modify Products Page</Link></div>}
+                    {userRole === ADMIN_NAME && <div className="item"><Link className="link" to="/addcategory">Add Category</Link></div>}
+                    {userRole === ADMIN_NAME && <div className="item"><Link className="link" to="/products/2">Modify Products Page</Link></div>}
                 </div>  
             </AuthorizeView>
         </div>

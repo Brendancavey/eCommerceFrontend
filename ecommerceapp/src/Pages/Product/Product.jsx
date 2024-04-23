@@ -5,10 +5,11 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BalanceIcon from '@mui/icons-material/Balance';
 import { useParams } from 'react-router-dom'
-import fetchImage from "../../UtilityFunctions/fetchImage";
-import fetchImage2 from "../../UtilityFunctions/fetchImage2";
 import { useDispatch } from 'react-redux';
 import { addToCart } from "../../Redux/cartReducer";
+import { getProductImage, getProductImage2 } from "../../Services/productService"
+import { getProductById } from '../../Services/productService';
+import { getCategoriesByProductId } from '../../Services/categoryService';
 
 const Product = () => {
     const productId = parseInt(useParams().id);
@@ -23,46 +24,32 @@ const Product = () => {
 
     useEffect(() => {
         getProductData(productId);
-        async function fetchImageData(id) {
-            const imageUrl = await fetchImage(id);
-            setImage1(imageUrl)
-            setSelectedImg(imageUrl)
-        }
-        async function fetchImageData2(id) {
-            const imageUrl = await fetchImage2(id);
-            setImage2(imageUrl)
-        }
-        fetchImageData(productId)
-        fetchImageData2(productId)
+        getImageData(productId)
         getCategoriesData(productId)
     }, [])
+    async function getImageData(id) {
+        const imageUrl = await getProductImage(id);
+        setImage1(imageUrl)
+        setSelectedImg(imageUrl)
+
+        const imageUrl2 = await getProductImage2(id)
+        setImage2(imageUrl2)
+    }
+
     async function getProductData(id) {
-        try {
-            const response = await fetch(`https://localhost:7072/Product/get-by-id/${id}`, {
-                method: 'GET'
-            });
-            if (response.ok) {
-                console.log("Fetched product data successfully")
-            }
-            const data = await response.json()
-            setItem(data);
-        } catch (error) {
-            console.error("Error fetching product data: ", error)
-        } 
+        const productData = await getProductById(id)
+        setItem(productData);
     }
     async function getCategoriesData(productId) {
-        try {
-            const response = await fetch(`https://localhost:7072/Category/get-categories-by-product/${productId}`, {
-                method: 'GET'
-            });
-            if (response.ok) {
-                console.log("Fetched product categories data successfully")
-            }
-            const data = await response.json()
-            setProductCategories(data);
-        } catch (error) {
-            console.error("Error fetching product categories data: ", error)
-        } 
+        const categoriesData = await getCategoriesByProductId(productId)
+        setProductCategories(categoriesData);
+    }
+    function img1() {
+        if (image1 != null) {
+            return <img src={image1} alt="" onClick={() => setSelectedImg(image1)} />
+
+        }
+        return
     }
     function img2() {
         if (image2 != null) {
@@ -76,7 +63,7 @@ const Product = () => {
                 <div className='product' key={item.id}>
                     <div className='left'>
                         <div className="images">
-                        <img src={image1} alt="" onClick={() => setSelectedImg(image1)} />
+                        {img1() } 
                         {img2() }
                         </div>
                         <div className="mainImg">

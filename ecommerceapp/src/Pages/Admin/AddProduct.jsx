@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { resetCategories } from "../../Redux/categoryReducer";
 import { useSelector } from 'react-redux';
 import AuthorizeView from "../../Components/AuthorizeView/AuthorizeView";
-import { AuthRequestOptions } from '../../Constants/AuthConstants'
+import { addProduct } from '../../Services/productService';
 
 function AddProduct() {
     const selectedCategories = useSelector(state => state.categories.selectedCategories);
@@ -42,27 +42,18 @@ function AddProduct() {
         selectedCategories.forEach(id => {
             formData.append('selectedCategoryIds[]', id);
         });
-        const requestOptions = AuthRequestOptions('POST', formData);
-        try {
-            const response = await fetch('https://localhost:7072/Product/addProduct', requestOptions);
 
-            if (response.ok) {
-                setResponseMessage(<h3 style={{ color: "green" }}>Added product successfully</h3>);
-                console.log("Added product successfully");
-                //clear form fields
-                setTitle('');
-                setDesc('');
-                setPrice('');
-                setSalePrice('');
-                dispatch(resetCategories());
-
-            } else {
-                console.error("Error happened", response.statusText);
-                setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {response.status}</h3>);
-            }
-        } catch (error) {
-            console.error("Error occured: ", error);
-            setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {error.toString()}</h3>);
+        const response = await addProduct(formData)
+        if (response.ok) {
+            setResponseMessage(<h3 style={{ color: "green" }}>Added product successfully</h3>);
+            //clear form fields
+            setTitle('');
+            setDesc('');
+            setPrice('');
+            setSalePrice('');
+            dispatch(resetCategories());
+        } else {
+            setResponseMessage(<h3 style={{ color: "red" }}>Error Occured: {response.status}</h3>);
         }
     }
     return (

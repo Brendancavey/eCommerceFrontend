@@ -5,7 +5,8 @@ import Categories from '../../Components/Categories/Categories'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { addToCategories, resetCategories } from "../../Redux/categoryReducer";
-import { AuthRequestOptions } from '../../Constants/AuthConstants'
+import { getProductById, updateProduct } from '../../Services/productService'
+import { getCategoriesByProductId } from '../../Services/categoryService'
 import "./Edit.scss"
 
 
@@ -43,33 +44,12 @@ function Edit() {
         }
     }, [item])
     async function getProductData(id) {
-        try {
-            const response = await fetch(`https://localhost:7072/Product/get-by-id/${id}`, {
-                method: 'GET'
-            });
-            if (response.ok) {
-                console.log("Fetched product data successfully")
-            }
-            const data = await response.json()
-            setItem(data);
-        } catch (error) {
-            console.error("Error fetching product data: ", error)
-        }
+        const data = await getProductById(id)
+        setItem(data);
     }
     async function getCategoriesData(productId) {
-        try {
-            const response = await fetch(`https://localhost:7072/Category/get-categories-by-product/${productId}`, {
-                method: 'GET'
-            });
-            if (response.ok) {
-                console.log("Fetched product categories data successfully")
-                const data = await response.json()
-                setProductCategories(data);
-            }
-            
-        } catch (error) {
-            console.error("Error fetching product categories data: ", error)
-        }
+        const data = await getCategoriesByProductId(productId)
+        setProductCategories(data);
     }
     function goBack() {
         window.history.back();
@@ -98,21 +78,14 @@ function Edit() {
         selectedCategories.forEach(id => {
             formData.append('selectedCategoryIds[]', id)
         })
-        const requestOptions = AuthRequestOptions('PUT', formData);
-        try {
-            const response = await fetch('https://localhost:7072/Product/updateProduct', requestOptions)
-
-            if (response.ok) {
-                setResponseMessage(<h3 style={{ color: "green" }}>Product updated successfully</h3>)
-                console.log("Product updated successfullyy")
-            } else {
-                setResponseMessage(<h3 style={{ color: "red" }}>Error occured while updating: {response.status} </h3>)
-                console.error("Error happened", response.statusText);
-            }
-        } catch (error) {
-            setResponseMessage(<h3 style={{ color: "red" }}>Error occured while updating: {error.toString()}</h3>)
-            console.error("Error occured: ", error);
+        const response = await updateProduct(formData)
+        if (response.ok) {
+            setResponseMessage(<h3 style={{ color: "green" }}>Product updated successfully</h3>)
         }
+        else {
+            setResponseMessage(<h3 style={{ color: "red" }}>Error occured while updating</h3>)
+        }
+        
     }
     return (
         <div className='edit'>

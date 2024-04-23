@@ -3,32 +3,22 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logOut } from "../../Redux/userReducer";
 import getAuthorization from "../../UtilityFunctions/getAuthorization";
 import removeAuthorization from "../../UtilityFunctions/removeAuthorization";
-import { AuthRequestOptions } from '../../Constants/AuthConstants';
 import { resetCart } from "../../Redux/cartReducer";
+import { updateUserCart } from "../../Services/userService"
 
 function LogoutLink(props) {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn)
     const cartProducts = useSelector(state => state.cart.products)
     const dispatch = useDispatch();
 
-    async function saveCart() {
+    async function handleSubmit() {
+        //update user cart
         const formData = new FormData()
         cartProducts.forEach(product => {
-            formData.append(product.id, product.quantity)
+            formData.append(product.id, product.quantity)})
+        await updateUserCart(formData);
 
-        })
-        const requestOptions = AuthRequestOptions("PUT", formData)
-
-        const response = await fetch("https://localhost:7072/api/Cart/updatecart", requestOptions)
-        if (response.ok) {
-            console.log("Cart saved succesfully")
-        }
-        else {
-            console.log("Cart did not save successfully")
-        }
-    }
-    async function handleSubmit(){ 
-        await saveCart();
+        //logout
         const authToken = getAuthorization()
         const response = await fetch("/logout", {
             method: "POST",
