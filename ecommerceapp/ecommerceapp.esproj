@@ -14,8 +14,10 @@
     <Folder Include="src\Components\Card\" />
     <Folder Include="src\Components\List\" />
     <Folder Include="src\Components\Cart\" />
+    <Folder Include="src\Components\Categories\" />
+    <Folder Include="src\Components\LogoutLink\" />
+    <Folder Include="src\Components\AuthorizeView\" />
     <Folder Include="src\Pages\Home\" />
-    <Folder Include="src\Pages\Product\" />
     <Folder Include="src\Pages\Products\" />
   </ItemGroup>
 </Project>

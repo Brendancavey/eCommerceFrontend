@@ -1,16 +1,18 @@
 import React from 'react'
 import "./Footer.scss"
+import { Link } from "react-router-dom";
+import { STORE_NAME, PRODUCTS_NAME } from '../../Constants/DesignConstants';
 
 const Footer = () => {
     return (
         <div className='footer'>
             <div className='top'>
                 <div className='item'>
-                    <h1>Categoies</h1>
-                    <span>Women</span>
-                    <span>Men</span>
-                    <span>Shoes</span>
-                    <span>Accessories</span>
+                    <h1>Categories</h1>
+                    <Link className="link" to="/products/2">{PRODUCTS_NAME}</Link>
+                    <span>Dogs</span>
+                    <span>Dog Food</span>
+                    <span>Dog Accessories</span>
                     <span>New Arrivals</span>
                 </div>
                 <div className='item'>
@@ -37,10 +39,10 @@ const Footer = () => {
             <div className='bottom'>
                 <div className='left'>
                     <span className='logo'>
-                        Lamastore
+                        {STORE_NAME}
                     </span>
                     <span className='copyright'>
-                        Copyright 2023. All Rights Reserved
+                        Copyright 2024. All Rights Reserved
                     </span>
                 </div>
                 <div className='right'>

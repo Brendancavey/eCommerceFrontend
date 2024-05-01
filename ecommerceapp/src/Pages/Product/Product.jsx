@@ -1,67 +1,125 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import "./Product.scss"
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BalanceIcon from '@mui/icons-material/Balance';
-
+import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { addToCart } from "../../Redux/cartReducer";
+import { getProductImage, getProductImage2 } from "../../Services/productService"
+import { getProductById } from '../../Services/productService';
+import { getCategoriesByProductId } from '../../Services/categoryService';
 
 const Product = () => {
-    const [selectedImg, setSelectedImg] = useState(0)
+    const productId = parseInt(useParams().id);
     const [quantity, setQuantity] = useState(1)
-    const images = [
-        "https://images.pexels.com/photos/991509/pexels-photo-991509.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/1356271/pexels-photo-1356271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    ];
-    return (
-        <div className='product'>
-            <div className='left'>
-                <div className="images">
-                    <img src={images[0]} alt="" onClick={() => setSelectedImg(0)} />
-                    <img src={images[1]} alt="" onClick={() => setSelectedImg(1)} />
-                </div>
-                <div className="mainImg">
-                    <img src={images[selectedImg]} alt=""/>
+    const [item, setItem] = useState({})
+    const [image1, setImage1] = useState()
+    const [image2, setImage2] = useState()
+    const [selectedImg, setSelectedImg] = useState()
+    const [productCategories, setProductCategories] = useState()
 
-                </div>
-            </div>
-            <div className='right'>
-                <h1>Title</h1>
-                <span className='price'>$30</span>
-                <p>
-                    Description of the item! This description can be long enough to wrap around and still have ample space for the web page to look nice.
-                </p>
-                <div className='quantity'>
-                    <button onClick={()=> setQuantity(prev=>prev===1? 1 : prev-1)}>-</button>
-                    {quantity}
-                    <button onClick={() => setQuantity(prev=>prev+1)}>+</button>
-                </div>
-                <button className='addToCart'>
-                    <AddShoppingCartIcon/> ADD TO CART
-                </button>
-                <div className='links'>
-                    <div className='item'>
-                        <FavoriteBorderIcon/> ADD TO WISH LIST
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        getProductData(productId);
+        getImageData(productId)
+        getCategoriesData(productId)
+    }, [])
+    async function getImageData(id) {
+        const imageUrl = await getProductImage(id);
+        setImage1(imageUrl)
+        setSelectedImg(imageUrl)
+
+        const imageUrl2 = await getProductImage2(id)
+        setImage2(imageUrl2)
+    }
+
+    async function getProductData(id) {
+        const productData = await getProductById(id)
+        setItem(productData);
+    }
+    async function getCategoriesData(productId) {
+        const categoriesData = await getCategoriesByProductId(productId)
+        setProductCategories(categoriesData);
+    }
+    function img1() {
+        if (image1 != null) {
+            return <img src={image1} alt="" onClick={() => setSelectedImg(image1)} />
+
+        }
+        return
+    }
+    function img2() {
+        if (image2 != null) {
+            return <img src={image2} alt="" onClick={() => setSelectedImg(image2)} />
+
+        }
+        return
+    }
+    return (
+        <div>
+                <div className='product' key={item.id}>
+                    <div className='left'>
+                        <div className="images">
+                        {img1() } 
+                        {img2() }
+                        </div>
+                        <div className="mainImg">
+                            <img src={selectedImg} alt="" />
+                        </div>
                     </div>
-                    <div className='item'>
-                        <BalanceIcon /> ADD TO TO COMPARE
+                    <div className='right'>
+                        <h1>{item.title}</h1>
+                        <div className='price'>
+                            <span>${item.price}</span>
+                            <span>${item.salePrice}</span>
+                        </div>
+                        <p>
+                            {item.description}
+                        </p>
+                        <div className='quantity'>
+                            <button onClick={() => setQuantity(prev => prev === 1 ? 1 : prev - 1)}>-</button>
+                            {quantity}
+                            <button onClick={() => setQuantity(prev => prev + 1)}>+</button>
+                        </div>
+                    <button className='addToCart' onClick={() => dispatch(addToCart({
+                        id: item.id,
+                        title: item.title,
+                        description: item.description,
+                        price: item.salePrice,
+                        img: image1,
+                        quantity,
+                    }))}>
+                            <AddShoppingCartIcon /> ADD TO CART
+                        </button>
+                        <div className='links'>
+                            <div className='item'>
+                                <FavoriteBorderIcon /> ADD TO WISH LIST
+                            </div>
+                            <div className='item'>
+                                <BalanceIcon /> ADD TO TO COMPARE
+                            </div>
+                        </div>
+                        <div className='info'>
+                            <span>Tags: {productCategories?.map(category => (
+                                <span key={category.id} className='tags'>{category.name}</span>
+                                ))}
+                            </span>
+                        
+                        </div>
+                        <hr />
+                        <div className='info'>
+                            <span>DESCRIPTION</span>
+                            <hr />
+                            <span>ADDITIONAL INFORMATION</span>
+                            <hr />
+                            <span>FAQ</span>
+                        </div>
                     </div>
                 </div>
-                <div className='info'>
-                    <span>Vendor: Polo</span>
-                    <span>Product Type: T-Shirt</span>
-                    <span>Tag: T-Shirt, Men, Top</span>
-                </div>
-                <hr />
-                <div className='info'>
-                    <span>DESCRIPTION</span>
-                    <hr />
-                    <span>ADDITIONAL INFORMATION</span>
-                    <hr />
-                    <span>FAQ</span>
-                </div>
-            </div>
         </div>
-    )
+    )    
 }
 export default Product

@@ -1,36 +1,29 @@
 import React from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import List from "../../components/List/List"
+import { useSelector } from 'react-redux'
+import List from "../../Components/List/List"
 import "./Products.scss"
+import Categories from "../../Components/Categories/Categories"
 
 const Products = () => {
+    const selectedCats = useSelector(state => state.categories.selectedCategories)
     const categoryId = parseInt(useParams().id);
-    const [maxPrice, setMaxPrice] = useState(1000)
+    const defaultMaxPrice = 500
+    const [maxPrice, setMaxPrice] = useState(defaultMaxPrice)
     const [sort, setSort] = useState(null)
     return (
         <div className='products'>
             <div className='left'>
                 <div className='filterItem'>
                     <h2>Product Categories</h2>
-                    <div className='inputItem'>
-                        <input type='checkbox' id="1" value={1} />
-                        <label htmlFor="1">Shirts</label>
-                    </div>
-                    <div className='inputItem'>
-                        <input type='checkbox' id="2" value={2} />
-                        <label htmlFor="2">Pants</label>
-                    </div>
-                    <div className='inputItem'>
-                        <input type='checkbox' id="3" value={3} />
-                        <label htmlFor="3">Shoes</label>
-                    </div>
+                    <Categories/>
                 </div>
                 <div className='filterItem'>
                     <h2>Filter by price</h2>
                     <div className='inputItem'>
                         <span>0</span>
-                        <input type='range' min={0} max={1000} onChange={(e)=>setMaxPrice(e.target.value)} />
+                        <input type='range' min={0} max={defaultMaxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
                         <span>{maxPrice}</span>
                     </div>
 
@@ -49,7 +42,7 @@ const Products = () => {
             </div>
             <div className='right'>
                 <img className='categoryImg' src="/images/dog1.jpg" alt=''/>
-                <List categoryId={categoryId} maxPrice={maxPrice} sort={sort} />
+                <List categoryId={categoryId} selectedCategories={selectedCats} maxPrice={maxPrice} sort={sort} />
             </div>
         </div>
     )
