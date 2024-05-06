@@ -9,7 +9,7 @@ is accidently closed or refreshed. The application was designed to have a user f
 <h2>Technical Description</h2>
 This frontend application is built using the React.js framework, JSX/JavaScript, and CSS/SASS. It leverages React Router DOM to establish navigation links between pages, and utilizes React Hooks to 
 manage state and side effects efficiently. The application also implements functional components for reusability and scalability. Redux is used for client state management, resulting for a seamless developer
-experience managing complex states. Asynchronous programming techiques are implemented such as async/await and fetch for efficient data fetching and processing from backend endpoints. The design
+experience managing complex states. Asynchronous programming techniques are implemented such as async/await and fetch for efficient data fetching and processing from backend endpoints. The design
 of the application was built utilizing SASS and flexbox, along with a few UI elements from MaterialUI. 
 
 <h2>Technologies Used</h2>
