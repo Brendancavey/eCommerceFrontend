@@ -1,4 +1,4 @@
-# Ecommerce APP
+# Ecommerce Frontend
 A frontend application for an Ecommerce website
 
 <h2>Description</h2>
